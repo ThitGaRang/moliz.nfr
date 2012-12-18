@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: fUML Non-functional Requirements Analysis
+Bundle-SymbolicName: org.modelexecution.fuml.nfr
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: modelexecution.org
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
