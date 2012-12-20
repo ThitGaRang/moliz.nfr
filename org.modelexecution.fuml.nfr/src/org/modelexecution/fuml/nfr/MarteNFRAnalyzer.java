@@ -24,11 +24,7 @@ public class MarteNFRAnalyzer implements ExecutionEventListener {
 	private PapyrusModelExecutor executor;
 
 	public MarteNFRAnalyzer(String modelPath) {
-		executor = createPapyrusModelExecutor(modelPath);
-	}
-
-	private PapyrusModelExecutor createPapyrusModelExecutor(String modelPath) {
-		return new PapyrusModelExecutor(modelPath);
+		executor = new PapyrusModelExecutor(modelPath);
 	}
 
 	public void runAnalysis(String activityName) {
