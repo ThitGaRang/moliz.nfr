@@ -17,7 +17,7 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Egq1U0RqEeKeQ8kGd3Sl0w" value="1"/>
       </ownedEnd>
     </packagedElement>
-    <packagedElement xmi:type="uml:Activity" xmi:id="_YFZZMERqEeKeQ8kGd3Sl0w" name="RPIP_service" specification="_PT9_0ERqEeKeQ8kGd3Sl0w" node="_c8g5IERqEeKeQ8kGd3Sl0w _qbgN0ERqEeKeQ8kGd3Sl0w __HPdEERqEeKeQ8kGd3Sl0w">
+    <packagedElement xmi:type="uml:Activity" xmi:id="_YFZZMERqEeKeQ8kGd3Sl0w" name="RPIP_service" specification="_PT9_0ERqEeKeQ8kGd3Sl0w" node="_c8g5IERqEeKeQ8kGd3Sl0w _qbgN0ERqEeKeQ8kGd3Sl0w __HPdEERqEeKeQ8kGd3Sl0w _M1KngEq_EeKByd-WVvvtsw">
       <edge xmi:type="uml:ObjectFlow" xmi:id="_GDSpMERrEeKeQ8kGd3Sl0w" name="read2call" source="_qblGUERqEeKeQ8kGd3Sl0w" target="__HPdE0RqEeKeQ8kGd3Sl0w">
         <guard xmi:type="uml:LiteralBoolean" xmi:id="_GDTQQERrEeKeQ8kGd3Sl0w" value="true"/>
         <weight xmi:type="uml:LiteralInteger" xmi:id="_GDTQQURrEeKeQ8kGd3Sl0w" value="1"/>
@@ -25,6 +25,10 @@
       <edge xmi:type="uml:ObjectFlow" xmi:id="_h_L24ERsEeKeQ8kGd3Sl0w" name="self2read" source="_gNuLMERqEeKeQ8kGd3Sl0w" target="_qblGUkRqEeKeQ8kGd3Sl0w">
         <guard xmi:type="uml:LiteralBoolean" xmi:id="_h_NFAERsEeKeQ8kGd3Sl0w" value="true"/>
         <weight xmi:type="uml:LiteralInteger" xmi:id="_h_NFAURsEeKeQ8kGd3Sl0w" value="1"/>
+      </edge>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_NbyioEq_EeKByd-WVvvtsw" name="call2final" source="__HPdEERqEeKeQ8kGd3Sl0w" target="_M1KngEq_EeKByd-WVvvtsw">
+        <guard xmi:type="uml:LiteralBoolean" xmi:id="_Nb4pQEq_EeKByd-WVvvtsw" value="true"/>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="_Nb4pQUq_EeKByd-WVvvtsw"/>
       </edge>
       <node xmi:type="uml:ReadSelfAction" xmi:id="_c8g5IERqEeKeQ8kGd3Sl0w" name="read self">
         <result xmi:id="_gNuLMERqEeKeQ8kGd3Sl0w" name="result" outgoing="_h_L24ERsEeKeQ8kGd3Sl0w" type="_AW48gERqEeKeQ8kGd3Sl0w">
@@ -41,11 +45,12 @@
           <upperBound xmi:type="uml:LiteralInteger" xmi:id="_qblGUURqEeKeQ8kGd3Sl0w" value="1"/>
         </result>
       </node>
-      <node xmi:type="uml:CallOperationAction" xmi:id="__HPdEERqEeKeQ8kGd3Sl0w" name="call requestPatientInfoPages" operation="_SqM70ERqEeKeQ8kGd3Sl0w">
+      <node xmi:type="uml:CallOperationAction" xmi:id="__HPdEERqEeKeQ8kGd3Sl0w" name="call requestPatientInfoPages" outgoing="_NbyioEq_EeKByd-WVvvtsw" operation="_SqM70ERqEeKeQ8kGd3Sl0w">
         <target xmi:id="__HPdE0RqEeKeQ8kGd3Sl0w" name="target" incoming="_GDSpMERrEeKeQ8kGd3Sl0w" type="_BxD0cERqEeKeQ8kGd3Sl0w"/>
       </node>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_M1KngEq_EeKByd-WVvvtsw" name="final RPIP_service" incoming="_NbyioEq_EeKByd-WVvvtsw"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:Activity" xmi:id="_vbnm0ERsEeKeQ8kGd3Sl0w" name="requestPatientInfoPages" specification="_SqM70ERqEeKeQ8kGd3Sl0w" node="_2P9ocERsEeKeQ8kGd3Sl0w _bIRM8ERtEeKeQ8kGd3Sl0w _eM9F8ERtEeKeQ8kGd3Sl0w">
+    <packagedElement xmi:type="uml:Activity" xmi:id="_vbnm0ERsEeKeQ8kGd3Sl0w" name="requestPatientInfoPages" specification="_SqM70ERqEeKeQ8kGd3Sl0w" node="_2P9ocERsEeKeQ8kGd3Sl0w _bIRM8ERtEeKeQ8kGd3Sl0w _eM9F8ERtEeKeQ8kGd3Sl0w _KaAMoEq_EeKByd-WVvvtsw">
       <edge xmi:type="uml:ControlFlow" xmi:id="_gg43cERtEeKeQ8kGd3Sl0w" name="initial2callA" source="_2P9ocERsEeKeQ8kGd3Sl0w" target="_bIRM8ERtEeKeQ8kGd3Sl0w">
         <guard xmi:type="uml:LiteralBoolean" xmi:id="_gg5egERtEeKeQ8kGd3Sl0w" value="true"/>
         <weight xmi:type="uml:LiteralInteger" xmi:id="_gg5egURtEeKeQ8kGd3Sl0w"/>
@@ -54,16 +59,17 @@
         <guard xmi:type="uml:LiteralBoolean" xmi:id="_g9FrQURtEeKeQ8kGd3Sl0w" value="true"/>
         <weight xmi:type="uml:LiteralInteger" xmi:id="_g9GSUERtEeKeQ8kGd3Sl0w"/>
       </edge>
-      <node xmi:type="uml:InitialNode" xmi:id="_2P9ocERsEeKeQ8kGd3Sl0w" name="InitialNode1" outgoing="_gg43cERtEeKeQ8kGd3Sl0w"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_K7w14Eq_EeKByd-WVvvtsw" name="callb2final" source="_eM9F8ERtEeKeQ8kGd3Sl0w" target="_KaAMoEq_EeKByd-WVvvtsw">
+        <guard xmi:type="uml:LiteralBoolean" xmi:id="_K7w14Uq_EeKByd-WVvvtsw" value="true"/>
+        <weight xmi:type="uml:LiteralInteger" xmi:id="_K7w14kq_EeKByd-WVvvtsw"/>
+      </edge>
+      <node xmi:type="uml:InitialNode" xmi:id="_2P9ocERsEeKeQ8kGd3Sl0w" name="initial requestPatientInfoPages" outgoing="_gg43cERtEeKeQ8kGd3Sl0w"/>
       <node xmi:type="uml:CallBehaviorAction" xmi:id="_bIRM8ERtEeKeQ8kGd3Sl0w" name="call A" outgoing="_g9FrQERtEeKeQ8kGd3Sl0w" incoming="_gg43cERtEeKeQ8kGd3Sl0w" behavior="_Xn0lAERtEeKeQ8kGd3Sl0w"/>
-      <node xmi:type="uml:CallBehaviorAction" xmi:id="_eM9F8ERtEeKeQ8kGd3Sl0w" name="call B" incoming="_g9FrQERtEeKeQ8kGd3Sl0w" behavior="_Yt_i4ERtEeKeQ8kGd3Sl0w"/>
+      <node xmi:type="uml:CallBehaviorAction" xmi:id="_eM9F8ERtEeKeQ8kGd3Sl0w" name="call B" outgoing="_K7w14Eq_EeKByd-WVvvtsw" incoming="_g9FrQERtEeKeQ8kGd3Sl0w" behavior="_Yt_i4ERtEeKeQ8kGd3Sl0w"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_KaAMoEq_EeKByd-WVvvtsw" name="final requestPatientInfoPages" incoming="_K7w14Eq_EeKByd-WVvvtsw"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:Activity" xmi:id="_Xn0lAERtEeKeQ8kGd3Sl0w" name="A" node="_0OXogESKEeKUXLsVsYwoAw">
-      <node xmi:type="uml:InitialNode" xmi:id="_0OXogESKEeKUXLsVsYwoAw" name="InitialNode1"/>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Activity" xmi:id="_Yt_i4ERtEeKeQ8kGd3Sl0w" name="B" node="_7cfcEESKEeKUXLsVsYwoAw">
-      <node xmi:type="uml:InitialNode" xmi:id="_7cfcEESKEeKUXLsVsYwoAw" name="InitialNode1"/>
-    </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_Xn0lAERtEeKeQ8kGd3Sl0w" name="A"/>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_Yt_i4ERtEeKeQ8kGd3Sl0w" name="B"/>
     <packagedElement xmi:type="uml:Class" xmi:id="_3UuM4ERzEeKUXLsVsYwoAw" name="PDA">
       <ownedAttribute xmi:id="_JUFsYEkdEeKfa_JT6u12cg" name="cpu" visibility="public" type="_-QivgERzEeKUXLsVsYwoAw">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Jr7koEkdEeKfa_JT6u12cg" value="1"/>

@@ -43,6 +43,7 @@ import fUML.Syntax.Actions.IntermediateActions.CreateObjectAction;
 import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
 import fUML.Syntax.Actions.IntermediateActions.ReadStructuralFeatureAction;
 import fUML.Syntax.Activities.IntermediateActivities.Activity;
+import fUML.Syntax.Activities.IntermediateActivities.ActivityFinalNode;
 import fUML.Syntax.Activities.IntermediateActivities.InitialNode;
 
 public class ModelExecutorTest {
@@ -107,27 +108,27 @@ public class ModelExecutorTest {
 		CallActionExecution call_RPIP_service = (CallActionExecution)execution_main.getNodeExecutions().get(3);
 		
 		// assert RPIP_service
-		assertEquals(3, execution_RPIP_service.getNodeExecutions().size());
+		assertEquals(4, execution_RPIP_service.getNodeExecutions().size());
 		assertTrue(execution_RPIP_service.getNodeExecutions().get(0).getNode() instanceof ReadSelfAction);
 		assertTrue(execution_RPIP_service.getNodeExecutions().get(1).getNode() instanceof ReadStructuralFeatureAction);
 		assertTrue(execution_RPIP_service.getNodeExecutions().get(2).getNode() instanceof CallAction);
 		CallActionExecution call_requestPatientInfoPages = (CallActionExecution)execution_RPIP_service.getNodeExecutions().get(2);
+		assertTrue(execution_RPIP_service.getNodeExecutions().get(3).getNode() instanceof ActivityFinalNode);
 		
 		// assert requestPatientInfoPage 
-		assertEquals(3, execution_requestPatientInfoPages.getNodeExecutions().size());
+		assertEquals(4, execution_requestPatientInfoPages.getNodeExecutions().size());
 		assertTrue(execution_requestPatientInfoPages.getNodeExecutions().get(0).getNode() instanceof InitialNode);
 		assertTrue(execution_requestPatientInfoPages.getNodeExecutions().get(1).getNode() instanceof CallAction);
 		CallActionExecution call_a = (CallActionExecution)execution_requestPatientInfoPages.getNodeExecutions().get(1);
 		assertTrue(execution_requestPatientInfoPages.getNodeExecutions().get(2).getNode() instanceof CallAction);
 		CallActionExecution call_b = (CallActionExecution)execution_requestPatientInfoPages.getNodeExecutions().get(2);
+		assertTrue(execution_requestPatientInfoPages.getNodeExecutions().get(3).getNode() instanceof ActivityFinalNode);
 		
 		// assert A
-		assertEquals(1, execution_a.getNodeExecutions().size());
-		assertTrue(execution_a.getNodeExecutions().get(0).getNode() instanceof InitialNode);
+		assertEquals(0, execution_a.getNodeExecutions().size());
 		
 		// assert B
-		assertEquals(1, execution_b.getNodeExecutions().size());
-		assertTrue(execution_b.getNodeExecutions().get(0).getNode() instanceof InitialNode);
+		assertEquals(0, execution_b.getNodeExecutions().size());
 		
 		// assert execution hierarchy
 		assertEquals(null, execution_main.getCaller());
