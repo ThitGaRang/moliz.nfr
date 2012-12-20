@@ -34,7 +34,7 @@ import org.modelexecution.fumldebug.core.event.Event;
 import org.modelexecution.fumldebug.core.trace.tracemodel.ActivityExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.CallActionExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.Trace;
-import org.modelexecution.fumldebug.debugger.papyrus.util.DiResourceUtil;
+import org.modelexecution.fumldebug.papyrus.util.DiResourceUtil;
 
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 import fUML.Syntax.Actions.BasicActions.CallAction;
