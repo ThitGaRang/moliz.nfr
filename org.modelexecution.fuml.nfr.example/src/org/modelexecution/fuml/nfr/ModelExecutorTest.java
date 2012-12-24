@@ -5,9 +5,8 @@
  * this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- * Philip Langer - initial API and implementation
+ * Tanja Mayerhofer - initial API and implementation
  */
-
 package org.modelexecution.fuml.nfr;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +23,6 @@ import fUML.Syntax.Actions.IntermediateActions.AddStructuralFeatureValueAction;
 import fUML.Syntax.Actions.IntermediateActions.CreateObjectAction;
 import fUML.Syntax.Actions.IntermediateActions.ReadSelfAction;
 import fUML.Syntax.Actions.IntermediateActions.ReadStructuralFeatureAction;
-
 import fUML.Syntax.Activities.IntermediateActivities.ActivityFinalNode;
 import fUML.Syntax.Activities.IntermediateActivities.InitialNode;
 
