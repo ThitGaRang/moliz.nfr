@@ -12,7 +12,7 @@ package org.modelexecution.fuml.nfr;
 
 import org.junit.Test;
 
-public class MarteNFRAnalyzerTest {
+public class ResourceUsageAnalyzerTest {
 
 	private static final String SIMPLE_MODEL_MAIN_ACTIVITY_NAME = "main"; //$NON-NLS-1$
 	private static final String SIMPLE_MODEL_PATH = "model/simple001.di"; //$NON-NLS-1$
@@ -22,15 +22,15 @@ public class MarteNFRAnalyzerTest {
 
 	@Test
 	public void runAnalysisOnSimpleModel() {
-		MarteNFRAnalyzer nfrAnalyzer = new MarteNFRAnalyzer(SIMPLE_MODEL_PATH);
-		nfrAnalyzer.runAnalysis(SIMPLE_MODEL_MAIN_ACTIVITY_NAME);
+		ResourceUsageAnalyzer analyzer = new ResourceUsageAnalyzer(SIMPLE_MODEL_PATH);
+		analyzer.runAnalysis(SIMPLE_MODEL_MAIN_ACTIVITY_NAME);
 
 	}
 
 	@Test
 	public void runAnalysisOnEHSModel() {
-		MarteNFRAnalyzer nfrAnalyzer = new MarteNFRAnalyzer(EHS_MODEL_PATH);
-		nfrAnalyzer.runAnalysis(EHS_MODEL_MAIN_ACTIVITY_NAME);
+		ResourceUsageAnalyzer analyzer = new ResourceUsageAnalyzer(EHS_MODEL_PATH);
+		analyzer.runAnalysis(EHS_MODEL_MAIN_ACTIVITY_NAME);
 	}
 
 }

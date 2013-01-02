@@ -19,19 +19,27 @@ import org.modelexecution.fumldebug.core.event.ActivityNodeExitEvent;
 import org.modelexecution.fumldebug.core.event.Event;
 import org.modelexecution.fumldebug.papyrus.PapyrusModelExecutor;
 
-public class MarteNFRAnalyzer implements ExecutionEventListener {
+import fUML.Semantics.Classes.Kernel.Object_;
+import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
+
+public class ResourceUsageAnalyzer implements ExecutionEventListener {
 
 	private PapyrusModelExecutor executor;
 
-	public MarteNFRAnalyzer(String modelPath) {
+	public ResourceUsageAnalyzer(String modelPath) {
 		executor = new PapyrusModelExecutor(modelPath);
 	}
 
-	public void runAnalysis(String activityName) {
+	public void runAnalysis(String activityName, Object_ context,
+			ParameterValueList parameterValues) {
 		reset();
 		executor.addEventListener(this);
-		executor.executeActivity(activityName);
+		executor.executeActivity(activityName, context, parameterValues);
 		executor.removeEventListener(this);
+	}
+
+	public void runAnalysis(String activityName) {
+		runAnalysis(activityName, null, new ParameterValueList());
 	}
 
 	private void reset() {
