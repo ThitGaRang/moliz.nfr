@@ -14,15 +14,23 @@ import org.junit.Test;
 
 public class MarteNFRAnalyzerTest {
 
-	private static final String MAIN_ACTIVITY_NAME = "main"; //$NON-NLS-1$
-	private static final String SIMPLE001_MODEL_PATH = "model/simple001.di"; //$NON-NLS-1$
+	private static final String SIMPLE_MODEL_MAIN_ACTIVITY_NAME = "main"; //$NON-NLS-1$
+	private static final String SIMPLE_MODEL_PATH = "model/simple001.di"; //$NON-NLS-1$
+
+	private static final String EHS_MODEL_MAIN_ACTIVITY_NAME = "main"; //$NON-NLS-1$
+	private static final String EHS_MODEL_PATH = "model/eHS.di"; //$NON-NLS-1$
 
 	@Test
-	public void test() {
-		MarteNFRAnalyzer nfrAnalyzer = new MarteNFRAnalyzer(
-				SIMPLE001_MODEL_PATH);
-		nfrAnalyzer.runAnalysis(MAIN_ACTIVITY_NAME);
+	public void runAnalysisOnSimpleModel() {
+		MarteNFRAnalyzer nfrAnalyzer = new MarteNFRAnalyzer(SIMPLE_MODEL_PATH);
+		nfrAnalyzer.runAnalysis(SIMPLE_MODEL_MAIN_ACTIVITY_NAME);
 
+	}
+
+	@Test
+	public void runAnalysisOnEHSModel() {
+		MarteNFRAnalyzer nfrAnalyzer = new MarteNFRAnalyzer(EHS_MODEL_PATH);
+		nfrAnalyzer.runAnalysis(EHS_MODEL_MAIN_ACTIVITY_NAME);
 	}
 
 }
