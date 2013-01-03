@@ -9,20 +9,14 @@
  */
 package org.modelexecution.fuml.nfr;
 
-import org.eclipse.uml2.uml.Activity;
-import org.eclipse.uml2.uml.ActivityNode;
-import org.eclipse.uml2.uml.Property;
-import org.eclipse.uml2.uml.Stereotype;
-import org.modelexecution.fumldebug.core.ExecutionEventListener;
-import org.modelexecution.fumldebug.core.event.ActivityExitEvent;
-import org.modelexecution.fumldebug.core.event.ActivityNodeExitEvent;
-import org.modelexecution.fumldebug.core.event.Event;
+import org.modelexecution.fuml.convert.IConversionResult;
+import org.modelexecution.fumldebug.core.trace.tracemodel.Trace;
 import org.modelexecution.fumldebug.papyrus.PapyrusModelExecutor;
 
 import fUML.Semantics.Classes.Kernel.Object_;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
-public class ResourceUsageAnalyzer implements ExecutionEventListener {
+public class ResourceUsageAnalyzer {
 
 	private PapyrusModelExecutor executor;
 
@@ -30,60 +24,16 @@ public class ResourceUsageAnalyzer implements ExecutionEventListener {
 		executor = new PapyrusModelExecutor(modelPath);
 	}
 
-	public void runAnalysis(String activityName, Object_ context,
-			ParameterValueList parameterValues) {
-		reset();
-		executor.addEventListener(this);
-		executor.executeActivity(activityName, context, parameterValues);
-		executor.removeEventListener(this);
+	public ResourceUsageAnalysis runAnalysis(String activityName,
+			Object_ context, ParameterValueList parameterValues) {
+		Trace trace = executor.executeActivity(activityName, context,
+				parameterValues);
+		IConversionResult mapping = executor.getConversionResult();
+		return new ResourceUsageAnalysis(trace, mapping);
 	}
 
-	public void runAnalysis(String activityName) {
-		runAnalysis(activityName, null, new ParameterValueList());
-	}
-
-	private void reset() {
-		// TODO needed?
-	}
-
-	@Override
-	public void notify(Event event) {
-		if (event instanceof ActivityExitEvent) {
-			ActivityExitEvent activityExitEvent = (ActivityExitEvent) event;
-			Activity activity = getActivity(activityExitEvent.getActivity());
-			processActivity(activity);
-		} else if (event instanceof ActivityNodeExitEvent) {
-			ActivityNodeExitEvent activityNodeExitEvent = (ActivityNodeExitEvent) event;
-			ActivityNode node = getActivityNode(activityNodeExitEvent.getNode());
-			processActivityNode(node);
-		}
-	}
-
-	private ActivityNode getActivityNode(
-			fUML.Syntax.Activities.IntermediateActivities.ActivityNode node) {
-		return (ActivityNode) executor.getConversionResult().getInputObject(
-				node);
-	}
-
-	private Activity getActivity(
-			fUML.Syntax.Activities.IntermediateActivities.Activity activity) {
-		return (Activity) executor.getConversionResult().getInputObject(
-				activity);
-	}
-
-	private void processActivity(Activity activity) {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void processActivityNode(ActivityNode node) {
-		for (Stereotype stereotype : node.getAppliedStereotypes()) {
-			for (Property property : stereotype.getAllAttributes()) {
-				System.out.println(node.getName() + "@" + stereotype.getName()
-						+ "/" + property.getName() + ": "
-						+ node.getValue(stereotype, property.getName()));
-			}
-		}
+	public ResourceUsageAnalysis runAnalysis(String activityName) {
+		return runAnalysis(activityName, null, new ParameterValueList());
 	}
 
 }

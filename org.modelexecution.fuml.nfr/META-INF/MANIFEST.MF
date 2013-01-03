@@ -10,7 +10,8 @@ Require-Bundle: org.modelexecution.fumldebug;bundle-version="1.0.0";visibility:=
  org.eclipse.uml2.uml;bundle-version="4.0.1";visibility:=reexport,
  org.modelexecution.fumldebug.papyrus;bundle-version="1.0.0",
  org.eclipse.papyrus.marte.properties;bundle-version="0.9.1",
- org.eclipse.papyrus.marte.static.profile;bundle-version="0.9.1",
+ org.eclipse.papyrus.marte.static.profile;bundle-version="0.9.1";visibility:=reexport,
  org.eclipse.papyrus.marte.vsl;bundle-version="0.9.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.modelexecution.fuml.nfr
+Export-Package: org.modelexecution.fuml.nfr,
+ org.modelexecution.fuml.nfr.internal
