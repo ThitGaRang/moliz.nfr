@@ -9,11 +9,13 @@
  */
 package org.modelexecution.fuml.nfr.internal;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.Resource;
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.ResourceUsage;
@@ -22,6 +24,7 @@ import org.modelexecution.fuml.nfr.IResourceUsage;
 
 public class BasicResourceUsage implements IResourceUsage {
 
+	private NamedElement namedElement;
 	private ResourceUsage resourceUsage;
 
 	private Map<Resource, String> execTime;
@@ -31,9 +34,15 @@ public class BasicResourceUsage implements IResourceUsage {
 	private Map<Resource, String> energy;
 	private Map<Resource, String> msgSize;
 
-	public BasicResourceUsage(ResourceUsage resourceUsage) {
-		this.resourceUsage = resourceUsage;
-		obtainValues();
+	public BasicResourceUsage(NamedElement namedElement,
+			ResourceUsage resourceUsage) {
+		this.namedElement = namedElement;
+		if (resourceUsage != null) {
+			this.resourceUsage = resourceUsage;
+			this.obtainValues();
+		} else {
+			createEmtpyMaps();
+		}
 	}
 
 	private void obtainValues() {
@@ -45,9 +54,18 @@ public class BasicResourceUsage implements IResourceUsage {
 		msgSize = createMap(resourceUsage.getMsgSize());
 	}
 
+	private void createEmtpyMaps() {
+		execTime = createMap(new BasicEList<String>());
+		allocatedMemory = createMap(new BasicEList<String>());
+		usedMemory = createMap(new BasicEList<String>());
+		powerPeak = createMap(new BasicEList<String>());
+		energy = createMap(new BasicEList<String>());
+		msgSize = createMap(new BasicEList<String>());
+	}
+
 	private Map<Resource, String> createMap(EList<String> values) {
 		Map<Resource, String> map = new HashMap<Resource, String>();
-		for (Resource resource : getUsedResources()) {
+		for (Resource resource : getUsedResourcesFromStereotype()) {
 			map.put(resource, getValue(values, resource));
 		}
 		return map;
@@ -59,7 +77,7 @@ public class BasicResourceUsage implements IResourceUsage {
 	}
 
 	private int getResourceIndex(Resource resource) {
-		return getUsedResources().indexOf(resource);
+		return getUsedResourcesFromStereotype().indexOf(resource);
 	}
 
 	private String getValue(EList<String> values, int index) {
@@ -83,6 +101,14 @@ public class BasicResourceUsage implements IResourceUsage {
 		return value != null && value.startsWith(VARIABLE_CHAR);
 	}
 
+	protected boolean isVariableOrUndefined(String value) {
+		return isVariable(value) || isUndefined(value);
+	}
+
+	protected boolean isUndefined(String value) {
+		return value == null || UNDEFINED.equals(value);
+	}
+
 	private boolean isNotNullAndNotEmpty(EList<String> values) {
 		return values != null && !values.isEmpty();
 	}
@@ -98,7 +124,13 @@ public class BasicResourceUsage implements IResourceUsage {
 
 	@Override
 	public List<Resource> getUsedResources() {
-		return Collections.unmodifiableList(resourceUsage.getUsedResources());
+		return getUsedResourcesFromStereotype();
+	}
+
+	protected List<Resource> getUsedResourcesFromStereotype() {
+		return resourceUsage != null ? Collections
+				.unmodifiableList(resourceUsage.getUsedResources())
+				: Collections.unmodifiableList(new ArrayList<Resource>());
 	}
 
 	@Override
@@ -133,7 +165,7 @@ public class BasicResourceUsage implements IResourceUsage {
 
 	@Override
 	public NamedElement getElement() {
-		return resourceUsage.getBase_NamedElement();
+		return namedElement;
 	}
 
 }

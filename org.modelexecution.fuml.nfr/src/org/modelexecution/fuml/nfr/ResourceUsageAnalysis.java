@@ -15,9 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.ResourceUsage;
-import org.eclipse.uml2.uml.Activity;
-import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Stereotype;
 import org.modelexecution.fuml.convert.IConversionResult;
 import org.modelexecution.fuml.nfr.internal.BasicResourceUsage;
@@ -57,30 +56,13 @@ public class ResourceUsageAnalysis {
 	private Collection<IResourceUsage> createResourceUsages(
 			ActivityExecution activityExecution) {
 		Collection<IResourceUsage> usages = new ArrayList<IResourceUsage>();
-
 		Collection<IResourceUsage> subUsages = createSubUsages(activityExecution);
 		ResourceUsage rawResourceUsage = getRawResourceUsage(activityExecution);
-
-		if (rawResourceUsage != null) {
-			CompoundResourceUsage usage = new CompoundResourceUsage(
-					rawResourceUsage, subUsages);
-			usages.add(usage);
-		} else {
-			usages.addAll(subUsages);
-		}
-
+		NamedElement activity = getNamedElement(activityExecution.getActivity());
+		CompoundResourceUsage usage = new CompoundResourceUsage(activity,
+				rawResourceUsage, subUsages);
+		usages.add(usage);
 		return usages;
-	}
-
-	private ResourceUsage getRawResourceUsage(
-			ActivityExecution activityExecution) {
-		ResourceUsage rawResourceUsage = getRawResourceUsage(activityExecution
-				.getActivity());
-		if (rawResourceUsage == null && activityExecution.getCaller() != null) {
-			CallActionExecution caller = activityExecution.getCaller();
-			rawResourceUsage = getRawResourceUsage(caller.getNode());
-		}
-		return rawResourceUsage;
 	}
 
 	private Collection<IResourceUsage> createSubUsages(
@@ -92,41 +74,66 @@ public class ResourceUsageAnalysis {
 			List<ActivityNodeExecution> nodeExecutions) {
 		Collection<IResourceUsage> usages = new ArrayList<IResourceUsage>();
 		for (ActivityNodeExecution nodeExecution : nodeExecutions) {
-			usages.addAll(createResourceUsages(nodeExecution));
+			usages.add(createResourceUsage(nodeExecution));
 		}
 		return usages;
 	}
 
-	private Collection<IResourceUsage> createResourceUsages(
+	private IResourceUsage createResourceUsage(
 			ActivityNodeExecution nodeExecution) {
-		Collection<IResourceUsage> usages = new ArrayList<IResourceUsage>();
 		ResourceUsage rawResourceUsage = getRawResourceUsage(nodeExecution
 				.getNode());
-
+		NamedElement namedElement = getNamedElement(nodeExecution.getNode());
+		IResourceUsage resourceUsage = null;
 		if (nodeExecution instanceof CallActionExecution) {
 			CallActionExecution callActionExecution = (CallActionExecution) nodeExecution;
 			ActivityExecution calledExecution = callActionExecution.getCallee();
-			usages.addAll(createResourceUsages(calledExecution));
+			Collection<IResourceUsage> subUsages = createResourceUsages(calledExecution);
+			resourceUsage = new CompoundResourceUsage(namedElement,
+					rawResourceUsage, subUsages);
 		} else {
-			if (rawResourceUsage != null) {
-				usages.add(new BasicResourceUsage(rawResourceUsage));
-			}
+			resourceUsage = new BasicResourceUsage(namedElement,
+					rawResourceUsage);
 		}
+		return resourceUsage;
+	}
 
-		return usages;
+	private NamedElement getNamedElement(
+			fUML.Syntax.Activities.IntermediateActivities.ActivityNode node) {
+		return (NamedElement) mapping.getInputObject(node);
+	}
+
+	private NamedElement getNamedElement(
+			fUML.Syntax.Activities.IntermediateActivities.Activity activity) {
+		return (NamedElement) mapping.getInputObject(activity);
+	}
+
+	private ResourceUsage getRawResourceUsage(
+			ActivityExecution activityExecution) {
+		ResourceUsage rawResourceUsage = getRawResourceUsage(activityExecution
+				.getActivity());
+		if (rawResourceUsage == null && activityExecution.getCaller() != null) {
+			rawResourceUsage = getResourceUsageOfCallingCallAction(activityExecution);
+		}
+		return rawResourceUsage;
+	}
+
+	private ResourceUsage getResourceUsageOfCallingCallAction(
+			ActivityExecution activityExecution) {
+		ResourceUsage rawResourceUsage;
+		CallActionExecution caller = activityExecution.getCaller();
+		rawResourceUsage = getRawResourceUsage(caller.getNode());
+		return rawResourceUsage;
 	}
 
 	private ResourceUsage getRawResourceUsage(
 			fUML.Syntax.Activities.IntermediateActivities.ActivityNode node) {
-		ActivityNode umlActivityNode = (ActivityNode) mapping
-				.getInputObject(node);
-		return getRawResourceUsage(umlActivityNode);
+		return getRawResourceUsage(getNamedElement(node));
 	}
 
 	private ResourceUsage getRawResourceUsage(
 			fUML.Syntax.Activities.IntermediateActivities.Activity activity) {
-		Activity umlActivity = (Activity) mapping.getInputObject(activity);
-		return getRawResourceUsage(umlActivity);
+		return getRawResourceUsage(getNamedElement(activity));
 	}
 
 	private ResourceUsage getRawResourceUsage(Element umlElement) {

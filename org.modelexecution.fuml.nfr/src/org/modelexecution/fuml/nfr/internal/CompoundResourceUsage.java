@@ -12,29 +12,48 @@ package org.modelexecution.fuml.nfr.internal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.Resource;
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.ResourceUsage;
+import org.eclipse.uml2.uml.NamedElement;
 import org.modelexecution.fuml.nfr.IResourceUsage;
 
 public class CompoundResourceUsage extends BasicResourceUsage {
 
-	private static final String UNSUPPORTED_VARIABLE = "#unsupported_variable#"; //$NON-NLS-1$
-	private static final String TOTAL = VARIABLE_CHAR + "total"; //$NON-NLS-1$
-
+	private List<Resource> usedResources;
 	private Collection<IResourceUsage> subUsages;
 
-	public CompoundResourceUsage(ResourceUsage resourceUsage,
-			Collection<IResourceUsage> subUsages) {
-		super(resourceUsage);
+	public CompoundResourceUsage(NamedElement namedElement,
+			ResourceUsage resourceUsage, Collection<IResourceUsage> subUsages) {
+		super(namedElement, resourceUsage);
 		this.subUsages = subUsages;
 	}
 
 	@Override
+	public List<Resource> getUsedResources() {
+		if (usedResources == null) {
+			if (getUsedResourcesFromStereotype().size() > 0) {
+				usedResources = getUsedResourcesFromStereotype();
+			} else {
+				usedResources = new ArrayList<Resource>();
+				for (IResourceUsage subUsage : subUsages) {
+					for (Resource resource : subUsage.getUsedResources()) {
+						if (!usedResources.contains(resource)) {
+							usedResources.add(resource);
+						}
+					}
+				}
+			}
+		}
+		return Collections.unmodifiableList(usedResources);
+	}
+
+	@Override
 	public String getAllocatedMemory(Resource resource) {
-		if (isVariable(super.getAllocatedMemory(resource))) {
+		if (isVariableOrUndefined(super.getAllocatedMemory(resource))) {
 			Collection<String> subValues = getSubAllocatedMemory(resource);
-			return computeVariableValue(super.getAllocatedMemory(resource),
+			return computeSumValue(super.getAllocatedMemory(resource),
 					subValues);
 		} else {
 			return super.getAllocatedMemory(resource);
@@ -63,9 +82,9 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 
 	@Override
 	public String getEnergy(Resource resource) {
-		if (isVariable(super.getEnergy(resource))) {
+		if (isVariableOrUndefined(super.getEnergy(resource))) {
 			Collection<String> subValues = getSubEnergy(resource);
-			return computeVariableValue(super.getEnergy(resource), subValues);
+			return computeSumValue(super.getEnergy(resource), subValues);
 		} else {
 			return super.getEnergy(resource);
 		}
@@ -88,9 +107,9 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 
 	@Override
 	public String getExecTime(Resource resource) {
-		if (isVariable(super.getExecTime(resource))) {
+		if (isVariableOrUndefined(super.getExecTime(resource))) {
 			Collection<String> subValues = getSubExecTime(resource);
-			return computeVariableValue(super.getExecTime(resource), subValues);
+			return computeSumValue(super.getExecTime(resource), subValues);
 		} else {
 			return super.getExecTime(resource);
 		}
@@ -103,19 +122,19 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 			if (isDefined(subValue)) {
 				subExecTime.add(subValue);
 			}
-			if (subUsage instanceof CompoundResourceUsage) {
-				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
-				subExecTime.addAll(compoundUsage.getSubExecTime(resource));
-			}
+//			if (subUsage instanceof CompoundResourceUsage) {
+//				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
+//				subExecTime.addAll(compoundUsage.getSubExecTime(resource));
+//			}
 		}
 		return subExecTime;
 	}
 
 	@Override
 	public String getMsgSize(Resource resource) {
-		if (isVariable(super.getMsgSize(resource))) {
+		if (isVariableOrUndefined(super.getMsgSize(resource))) {
 			Collection<String> subValues = getSubMsgSize(resource);
-			return computeVariableValue(super.getMsgSize(resource), subValues);
+			return computeSumValue(super.getMsgSize(resource), subValues);
 		} else {
 			return super.getMsgSize(resource);
 		}
@@ -138,9 +157,9 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 
 	@Override
 	public String getPowerPeak(Resource resource) {
-		if (isVariable(super.getPowerPeak(resource))) {
+		if (isVariableOrUndefined(super.getPowerPeak(resource))) {
 			Collection<String> subValues = getSubPowerPeak(resource);
-			return computeVariableValue(super.getPowerPeak(resource), subValues);
+			return computeSumValue(super.getPowerPeak(resource), subValues);
 		} else {
 			return super.getPowerPeak(resource);
 		}
@@ -163,10 +182,9 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 
 	@Override
 	public String getUsedMemory(Resource resource) {
-		if (isVariable(super.getUsedMemory(resource))) {
+		if (isVariableOrUndefined(super.getUsedMemory(resource))) {
 			Collection<String> subValues = getSubUsedMemory(resource);
-			return computeVariableValue(super.getUsedMemory(resource),
-					subValues);
+			return computeSumValue(super.getUsedMemory(resource), subValues);
 		} else {
 			return super.getUsedMemory(resource);
 		}
@@ -187,12 +205,8 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 		return subUsedMemory;
 	}
 
-	private String computeVariableValue(String variable,
-			Collection<String> subValues) {
-		if (TOTAL.equals(variable)) {
-			return computeSum(subValues);
-		}
-		return UNSUPPORTED_VARIABLE;
+	private String computeSumValue(String variable, Collection<String> subValues) {
+		return computeSum(subValues);
 	}
 
 	private String computeSum(Collection<String> subValues) {

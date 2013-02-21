@@ -19,8 +19,8 @@ public class ResourceUsageAnalyzerTest {
 	private static final String SIMPLE_MODEL_MAIN_ACTIVITY_NAME = "main"; //$NON-NLS-1$
 	private static final String SIMPLE_MODEL_PATH = "model/simple001.di"; //$NON-NLS-1$
 
-	private static final String EHS_MODEL_MAIN_ACTIVITY_NAME = "main"; //$NON-NLS-1$
-	private static final String EHS_MODEL_PATH = "model/eHS.di"; //$NON-NLS-1$
+	private static final String EHS_MODEL_MAIN_ACTIVITY_NAME = "eHS::main"; //$NON-NLS-1$
+	private static final String EHS_MODEL_PATH = "model/ehs.di"; //$NON-NLS-1$
 
 	@Test
 	public void runAnalysisOnSimpleModel() {
