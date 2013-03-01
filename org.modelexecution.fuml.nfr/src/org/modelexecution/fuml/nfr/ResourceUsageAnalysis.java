@@ -137,8 +137,15 @@ public class ResourceUsageAnalysis {
 	}
 
 	private ResourceUsage getRawResourceUsage(Element umlElement) {
-		Stereotype appliedStereotype = umlElement
-				.getAppliedStereotype(RESOURCE_USAGE_QUALIFIED_NAME);
+		Stereotype appliedStereotype = null;
+		try {
+			// this throws an exception the first time it is called?!?! *sigh*
+			appliedStereotype = umlElement
+					.getAppliedStereotype(RESOURCE_USAGE_QUALIFIED_NAME);
+		} catch (Exception e) {
+			appliedStereotype = umlElement
+					.getAppliedStereotype(RESOURCE_USAGE_QUALIFIED_NAME);
+		}
 		return appliedStereotype != null ? (ResourceUsage) umlElement
 				.getStereotypeApplication(appliedStereotype) : null;
 	}
