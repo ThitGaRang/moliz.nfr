@@ -10,6 +10,8 @@
 
 package org.modelexecution.fuml.nfr;
 
+import static junit.framework.Assert.*;
+
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.Resource;
 import org.junit.Test;
 import org.modelexecution.fuml.nfr.internal.CompoundResourceUsage;
@@ -26,18 +28,22 @@ public class ResourceUsageAnalyzerTest {
 	public void runAnalysisOnSimpleModel() {
 		ResourceUsageAnalyzer analyzer = new ResourceUsageAnalyzer(SIMPLE_MODEL_PATH);
 		ResourceUsageAnalysis analysis = analyzer.runAnalysis(SIMPLE_MODEL_MAIN_ACTIVITY_NAME);
-		System.out.println("================== Simple Model ===============");
-		for (IResourceUsage usage : analysis.getResourceUsages()) {
-			debugPrint(usage);
-		}
-		// TODO implement asserts
+		
+		assertEquals(1, analysis.getResourceUsages().size());
+		IResourceUsage resourceUsage = analysis.getResourceUsages().iterator().next();
+		
+		assertEquals(1, resourceUsage.getUsedResources().size());
+		Resource resource = resourceUsage.getUsedResources().get(0);
+		
+		assertEquals(15f, Float.valueOf(resourceUsage.getExecTime(resource)));
+		assertEquals(0f, Float.valueOf(resourceUsage.getAllocatedMemory(resource)));
 	}
 
 	@Test
 	public void runAnalysisOnEHSModel() {
 		ResourceUsageAnalyzer analyzer = new ResourceUsageAnalyzer(EHS_MODEL_PATH);
 		ResourceUsageAnalysis analysis = analyzer.runAnalysis(EHS_MODEL_MAIN_ACTIVITY_NAME);
-		System.out.println("================== EHS ===============");
+		System.out.println("================== EHS ==================");
 		for (IResourceUsage usage : analysis.getResourceUsages()) {
 			debugPrint(usage);
 		}

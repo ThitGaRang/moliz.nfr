@@ -67,11 +67,6 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 			if (isDefined(subValue)) {
 				subAllocatedMemory.add(subValue);
 			}
-			if (subUsage instanceof CompoundResourceUsage) {
-				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
-				subAllocatedMemory.addAll(compoundUsage
-						.getSubAllocatedMemory(resource));
-			}
 		}
 		return subAllocatedMemory;
 	}
@@ -97,10 +92,6 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 			if (isDefined(subValue)) {
 				subEnergy.add(subValue);
 			}
-			if (subUsage instanceof CompoundResourceUsage) {
-				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
-				subEnergy.addAll(compoundUsage.getSubEnergy(resource));
-			}
 		}
 		return subEnergy;
 	}
@@ -122,10 +113,6 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 			if (isDefined(subValue)) {
 				subExecTime.add(subValue);
 			}
-//			if (subUsage instanceof CompoundResourceUsage) {
-//				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
-//				subExecTime.addAll(compoundUsage.getSubExecTime(resource));
-//			}
 		}
 		return subExecTime;
 	}
@@ -146,10 +133,6 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 			String subValue = subUsage.getMsgSize(resource);
 			if (isDefined(subValue)) {
 				subMsgSize.add(subValue);
-			}
-			if (subUsage instanceof CompoundResourceUsage) {
-				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
-				subMsgSize.addAll(compoundUsage.getSubMsgSize(resource));
 			}
 		}
 		return subMsgSize;
@@ -172,10 +155,6 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 			if (isDefined(subValue)) {
 				subPowerPeak.add(subValue);
 			}
-			if (subUsage instanceof CompoundResourceUsage) {
-				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
-				subPowerPeak.addAll(compoundUsage.getSubPowerPeak(resource));
-			}
 		}
 		return subPowerPeak;
 	}
@@ -196,10 +175,6 @@ public class CompoundResourceUsage extends BasicResourceUsage {
 			String subValue = subUsage.getUsedMemory(resource);
 			if (isDefined(subValue)) {
 				subUsedMemory.add(subValue);
-			}
-			if (subUsage instanceof CompoundResourceUsage) {
-				CompoundResourceUsage compoundUsage = (CompoundResourceUsage) subUsage;
-				subUsedMemory.addAll(compoundUsage.getSubUsedMemory(resource));
 			}
 		}
 		return subUsedMemory;
