@@ -16,7 +16,6 @@ import java.io.IOException;
 
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.Resource;
 import org.junit.Test;
-import org.modelexecution.fuml.nfr.internal.CompoundResourceUsage;
 
 public class ResourceUsageAnalyzerTest {
 
@@ -46,19 +45,13 @@ public class ResourceUsageAnalyzerTest {
 		ResourceUsageAnalyzer analyzer = new ResourceUsageAnalyzer(EHS_MODEL_PATH);
 		ResourceUsageAnalysis analysis = analyzer.runAnalysis(EHS_MODEL_MAIN_ACTIVITY_NAME);
 		System.out.println("================== EHS ==================");
-		for (IResourceUsage usage : analysis.getResourceUsages()) {
-			//debugPrint(usage);
-		}
+		
 		// TODO implement asserts
 		
 		ResourceUsageCSVPrinter printer = new ResourceUsageCSVPrinter(analysis);
 		printer.printTo(System.out);
 	}
 	
-	private void debugPrint(IResourceUsage usage) {
-		debugPrint(usage, "");
-	}
-
 	private void debugPrint(IResourceUsage usage, String prefix) {			
 		System.out.println(prefix + usage.getElement().getQualifiedName());
 		for (Resource resource : usage.getUsedResources()) {

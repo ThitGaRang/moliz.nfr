@@ -7,7 +7,7 @@
  * Contributors:
  * Philip Langer - initial API and implementation
  */
-package org.modelexecution.fuml.nfr.internal;
+package org.modelexecution.fuml.nfr;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.Resource;
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.ResourceUsage;
 import org.eclipse.uml2.uml.NamedElement;
-import org.modelexecution.fuml.nfr.IResourceUsage;
+import org.modelexecution.fuml.nfr.internal.BasicResourceUsage;
 
 public class CompoundResourceUsage extends BasicResourceUsage {
 

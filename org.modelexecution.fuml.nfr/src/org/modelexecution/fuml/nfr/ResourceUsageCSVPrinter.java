@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.Resource;
-import org.modelexecution.fuml.nfr.internal.CompoundResourceUsage;
 
 public class ResourceUsageCSVPrinter {
 

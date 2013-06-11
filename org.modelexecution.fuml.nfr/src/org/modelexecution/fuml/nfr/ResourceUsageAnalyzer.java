@@ -18,6 +18,7 @@ import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 
 public class ResourceUsageAnalyzer {
 
+	private boolean isRunning = false;
 	private PapyrusModelExecutor executor;
 
 	public ResourceUsageAnalyzer(String modelPath) {
@@ -26,14 +27,20 @@ public class ResourceUsageAnalyzer {
 
 	public ResourceUsageAnalysis runAnalysis(String activityName,
 			Object_ context, ParameterValueList parameterValues) {
+		isRunning = true;
 		Trace trace = executor.executeActivity(activityName, context,
 				parameterValues);
 		IConversionResult mapping = executor.getConversionResult();
-		return new ResourceUsageAnalysis(trace, mapping);
+		ResourceUsageAnalysis analysis = new ResourceUsageAnalysis(trace, mapping);
+		isRunning = false;
+		return analysis; 
 	}
 
 	public ResourceUsageAnalysis runAnalysis(String activityName) {
 		return runAnalysis(activityName, null, new ParameterValueList());
 	}
 
+	public boolean isRunning() {
+		return isRunning;
+	}	
 }

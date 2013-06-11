@@ -20,7 +20,6 @@ import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Stereotype;
 import org.modelexecution.fuml.convert.IConversionResult;
 import org.modelexecution.fuml.nfr.internal.BasicResourceUsage;
-import org.modelexecution.fuml.nfr.internal.CompoundResourceUsage;
 import org.modelexecution.fumldebug.core.trace.tracemodel.ActivityExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.ActivityNodeExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.CallActionExecution;
