@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="org.modelexecution.fuml.nfr.debug.ui.launch.NFRLaunchConfigurationTabGroup"
+            id="org.modelexecution.fuml.nfr.debug.ui.launchConfigurationTabGroup"
+            type="org.modelexecution.fuml.nfr.debug.launchConfigurationType">
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="org.modelexecution.fuml.nfr.debug.launchConfigurationType"
+            icon="icons/NFRLaunch.png"
+            id="org.modelexecution.fuml.nfr.debug.ui.launchConfigurationTypeImage">
+      </launchConfigurationTypeImage>
+   </extension>
+
+</plugin>
