@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.modelexecution.fuml.nfr.feature"
+      label="Moliz NFR Analysis"
+      version="1.0.0.qualifier"
+      provider-name="modelexecution.org">
+
+   <description url="Moliz Project Updates">
+      Model-based performance analyzer based on fUML for calculating the expected execution time of software services provided by a system.
+   </description>
+
+   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+      Copyright (c) 2013 Vienna University of Technology.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License
+v1.0 which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <url>
+      <update label="Moliz Project Updates" url="http://www.modelexecution.org/updates"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.papyrus.infra.core" version="0.9.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.uml2.uml" version="4.0.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.papyrus.marte.properties" version="0.9.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.papyrus.marte.static.profile" version="0.9.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.papyrus.marte.vsl" version="0.9.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.debug.core" version="3.7.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.debug.ui" version="3.8.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="3.8.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.ecore.xmi" version="2.8.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.edit" version="2.8.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.edit.ui" version="2.8.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.uml2.uml" version="3.2.100" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.logging" version="1.0.4" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.papyrus.infra.core.sasheditor.di" version="0.9.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.uml2.uml" version="4.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui" version="1.6.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.papyrus.infra.core" version="0.9.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.modelexecution.fuml.nfr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.modelexecution.fuml.nfr.debug"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.modelexecution.fuml.nfr.debug.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.modelexecution.fuml.convert"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.modelexecution.fuml.convert.uml2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.modelexecution.fumldebug"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.modelexecution.fumldebug.papyrus"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
