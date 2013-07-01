@@ -7862,7 +7862,7 @@
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_0FDRUuACEeKvDPd8Bh4aZQ" points="[8, 3, -240, -7]$[223, 3, -25, -7]"/>
     </edges>
   </notation:Diagram>
-  <notation:Diagram xmi:id="_D4j-0OAuEeKeo_423tvTpQ" type="PapyrusUMLActivityDiagram" name="ApplicationServer::setFoundCustomer" measurementUnit="Pixel">
+  <notation:Diagram xmi:id="_D4j-0OAuEeKeo_423tvTpQ" type="PapyrusUMLActivityDiagram" name="ApplicationController::setFoundCustomer" measurementUnit="Pixel">
     <children xmi:type="notation:Shape" xmi:id="_D4j-0eAuEeKeo_423tvTpQ" type="2001" fontName="Segoe UI" lineColor="0">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_D4j-0uAuEeKeo_423tvTpQ" source="ShadowFigure">
         <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_D4j-0-AuEeKeo_423tvTpQ" key="ShadowFigure_Value" value="false"/>

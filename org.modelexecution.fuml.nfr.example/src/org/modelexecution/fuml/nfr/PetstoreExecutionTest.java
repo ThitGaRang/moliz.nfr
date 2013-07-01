@@ -90,7 +90,7 @@ public class PetstoreExecutionTest implements ExecutionEventListener {
 	}
 
 	/**
-	 * login: Login with wrong password
+	 * login: Unsuccessful login due to wrong password
 	 */
 	@Test
 	public void testScenario2() {
@@ -137,7 +137,6 @@ public class PetstoreExecutionTest implements ExecutionEventListener {
 		Assert.assertEquals(1, output.size());
 		Assert.assertEquals(1, output.get(0).values.size());
 		Assert.assertTrue(output.get(0).values.get(0) instanceof Reference);
-
 		Object_ item_poodle = ((Reference) output.get(0).values.get(0)).referent;
 		Assert.assertEquals("Item", item_poodle.types.get(0).name);
 		Assert.assertEquals(1, getFeatureValue(item_poodle, "name").size());
@@ -209,60 +208,78 @@ public class PetstoreExecutionTest implements ExecutionEventListener {
 		clearLocus(executor);
 		executor.executeActivity("scenario6", null, null);
 
-		// get customers
-		Set<Object_> customers = getObjects(executor, "Customer");
-		Assert.assertEquals(2, customers.size());
-		Object_ bill = getCustomerByLogin(executor, "bill");
+
 		Object_ liz = getCustomerByLogin(executor, "liz");
-		Assert.assertNotNull(bill);
 		Assert.assertNotNull(liz);
-
-		// get cart
-		Set<Object_> cartObjects = getObjects(executor, "Cart");
-		Assert.assertEquals(1, cartObjects.size());
-		Object_ cart = cartObjects.iterator().next();
-
-		// get items
+ 
 		Object_ bulldogItem = getItemByName(executor, "Bulldog");
+		Assert.assertNotNull(bulldogItem);
+
 		Object_ poodleItem = getItemByName(executor, "Poodle");
+		Assert.assertNotNull(poodleItem);
 		
-		// check cart
-		Set<Object_> lizCarts = getLinkedObjects(executor, "cart_customer_1", liz, "customer");
-		Assert.assertEquals(1,  lizCarts.size());
-		Object_ lizCart = lizCarts.iterator().next();
-		Assert.assertEquals(cart, lizCart);		
+		Set<Object_> cartObjects = getObjects(executor, "Cart");
+		// there is one cart
+		Assert.assertEquals(1, cartObjects.size()); 
 
 		Set<Object_> cartitems = getObjects(executor, "CartItem");
-		Assert.assertEquals(2, cartitems.size());
+		// there are two cartItems
+		Assert.assertEquals(2, cartitems.size()); 				
+		
+		Set<Link> cartLinks = getLinks(executor, "cart_customer_1");
+		// there is one link between Customer and Cart
+		Assert.assertEquals(1, cartLinks.size()); 
+		
 		Set<Link> cartItemLinks = getLinks(executor, "cart_cartItem_1");
-		Assert.assertEquals(2, cartItemLinks.size());		
+		// there are two links between Cart and CartItem
+		Assert.assertEquals(2, cartItemLinks.size());  
+		
+		Set<Object_> lizCarts = getLinkedObjects(executor, "cart_customer_1", liz, "customer");
+		// liz has one cart
+		Assert.assertEquals(1,  lizCarts.size()); 
+		Object_ lizCart = lizCarts.iterator().next();
+		
+		Set<Object_> lizCartItems = getLinkedObjects(executor, "cart_cartItem_1", lizCart, "cart");
+		// liz cart contains two cartItems
+		Assert.assertEquals(2, lizCartItems.size()); 
 		
 		Object_ lizCartItemPoodle = null;
 		Object_ lizCartItemBulldog = null;
 		
-		Set<Link> itemLinks = getLinks(executor, "cartItem_item_1");
-		Assert.assertEquals(2, itemLinks.size());
-		Iterator<Link> itemLinksIterator = itemLinks.iterator();
-		while (itemLinksIterator.hasNext()) {
-			Link itemLink = itemLinksIterator.next();
-			Object_ item = ((Reference) getFeatureValue(itemLink, "item")
-					.get(0)).referent;
-			Object_ cartitem = ((Reference) getFeatureValue(itemLink,
-					"cartItem").get(0)).referent;
-			if (item.equals(bulldogItem)) {
+		Iterator<Object_> cartitemsIterator = lizCartItems.iterator();
+		while(cartitemsIterator.hasNext()) {
+			Object_ cartitem = cartitemsIterator.next();
+			Set<Object_> items = getLinkedObjects(executor, "cartItem_item_1", cartitem, "cartItem");
+			Assert.assertEquals(1, items.size());
+			Object_ item = items.iterator().next();
+			if(item.equals(bulldogItem)) {
 				lizCartItemBulldog = cartitem;
-			} else if (item.equals(poodleItem)) {
+			} else if(item.equals(poodleItem)) {
 				lizCartItemPoodle = cartitem;
 			}
-		}
-
-		// check cart item quantity
+		}		
+		Assert.assertNotNull(lizCartItemBulldog);
+		Assert.assertNotNull(lizCartItemPoodle);
+		
+		// the quantity of the cartItem for Bulldog is set
+		Assert.assertEquals(1, getFeatureValue(lizCartItemBulldog, "quantity").size());
+		// liz added 2 Bulldogs to the cart
 		Assert.assertEquals(2,
-				((IntegerValue) getFeatureValue(lizCartItemBulldog, "quantity")
+				((IntegerValue) getFeatureValue(lizCartItemBulldog, "quantity") 
 						.get(0)).value);
+		// the quantity of the cartItem for Poodle is set
+		Assert.assertEquals(1, getFeatureValue(lizCartItemPoodle, "quantity").size());
+		// liz added 1 Poodle to the cart
 		Assert.assertEquals(1,
-				((IntegerValue) getFeatureValue(lizCartItemPoodle, "quantity")
+				((IntegerValue) getFeatureValue(lizCartItemPoodle, "quantity") 
 						.get(0)).value);
+		
+		Set<Object_> orderServices = getObjects(executor, "OrderService");
+		Assert.assertEquals(1, orderServices.size());
+		Object_ orderService = orderServices.iterator().next();
+		// helper variable was cleaned up
+		Assert.assertEquals(0,
+				getFeatureValue(orderService, "foundCartItem").size()); 
 	}
 
 	/**
@@ -280,76 +297,87 @@ public class PetstoreExecutionTest implements ExecutionEventListener {
 						trace.getActivityExecutions().get(0)
 								.getActivityExecutionID());
 
-		// get output order
+		Object_ liz = getCustomerByLogin(executor, "liz");
+		Assert.assertNotNull(liz);
+		
+		Object_ bulldogItem = getItemByName(executor, "Bulldog");
+		Assert.assertNotNull(bulldogItem);
+		
+		Object_ poodleItem = getItemByName(executor, "Poodle");
+		Assert.assertNotNull(bulldogItem);
+		
+		Set<Object_> orderObjects = getObjects(executor, "Order");
+		// there is one order
+		Assert.assertEquals(1, orderObjects.size()); 
+		Object_ order = orderObjects.iterator().next();
+		
 		Assert.assertEquals(1, output.size());
 		Assert.assertEquals(1, output.get(0).values.size());
-		Assert.assertTrue(output.get(0).values.get(0) instanceof Reference);
-
-		// check order
-		Set<Object_> orderObjects = getObjects(executor, "Order");
-		Assert.assertEquals(1, orderObjects.size());
-		Object_ order = orderObjects.iterator().next();
-		Assert.assertEquals(order,
-				((Reference) output.get(0).values.get(0)).referent);
-
-		// get liz customer
-		Object_ liz = getCustomerByLogin(executor, "liz");
+		Assert.assertTrue(output.get(0).values.get(0) instanceof Reference); 
+		// the order corresponds to the output
+		Assert.assertEquals(order, ((Reference)output.get(0).values.get(0)).referent); 
+		
+		Set<Object_> orderLines = getObjects(executor, "OrderLine");
+		// there are two orderLines
+		Assert.assertEquals(2, orderLines.size()); 
+		
+		Set<Link> orderLinks = getLinks(executor, "order_customer_1");
+		// there is one link between Customer and Order
+		Assert.assertEquals(1, orderLinks.size()); 
+		
+		Set<Link> orderLineLinks = getLinks(executor, "order_orderLine_1");
+		// there are two links between Order and OrderLine
+		Assert.assertEquals(2, orderLineLinks.size()); 
+		
 		Set<Object_> lizOrders = getLinkedObjects(executor, "order_customer_1",
 				liz, "customer");
-		Assert.assertEquals(1, lizOrders.size());
-		Assert.assertEquals(order, lizOrders.iterator().next());
+		// liz has one order
+		Assert.assertEquals(1, lizOrders.size()); 		
+		Object_ lizOrder = lizOrders.iterator().next();
+		
+		Set<Object_> lizOrderLines = getLinkedObjects(executor, "order_orderLine_1", lizOrder, "order");
+		// liz order contains two orderLines
+		Assert.assertEquals(2, lizOrderLines.size()); 
 
-		// get items
-		Object_ bulldog = getItemByName(executor, "Bulldog");
-		Object_ poodle = getItemByName(executor, "Poodle");
-
-		// check order
 		Object_ orderLineBulldog = null;
 		Object_ orderLinePoodle = null;
 
-		Set<Link> orderLineLinks = getLinks(executor, "order_orderLine_1");
-		Assert.assertEquals(2, orderLineLinks.size());
-
-		Iterator<Link> orderLineLinksIterator = orderLineLinks.iterator();
-		while (orderLineLinksIterator.hasNext()) {
-			Link orderLinksLink = orderLineLinksIterator.next();
-			Object_ orderLine = ((Reference) getFeatureValue(orderLinksLink,
-					"orderLines").get(0)).referent;
-
-			Set<Object_> orderLineItems = getLinkedObjects(executor,
+		Iterator<Object_> orderLinesIterator = lizOrderLines.iterator();
+		while (orderLinesIterator.hasNext()) { 
+			Object_ orderLine = orderLinesIterator.next();
+			Set<Object_> items = getLinkedObjects(executor,
 					"orderLine_item_1", orderLine, "orderLine");
-			Assert.assertEquals(1, orderLineItems.size());
-			Object_ orderLineItem = orderLineItems.iterator().next();
-			if (orderLineItem.equals(bulldog)) {
+			Assert.assertEquals(1, items.size());
+			Object_ item = items.iterator().next();
+			if (item.equals(bulldogItem)) {
 				orderLineBulldog = orderLine;
-			} else if (orderLineItem.equals(poodle)) {
+			} else if (item.equals(poodleItem)) {
 				orderLinePoodle = orderLine;
 			}
 		}
-
 		Assert.assertNotNull(orderLineBulldog);
 		Assert.assertNotNull(orderLinePoodle);
 
+		// the quantity of the orderLine for Bulldog is set
+		Assert.assertEquals(1, getFeatureValue(orderLineBulldog, "quantity").size());
+		// liz ordered 2 Bulldogs
 		Assert.assertEquals(2,
 				((IntegerValue) getFeatureValue(orderLineBulldog, "quantity")
-						.get(0)).value);
+						.get(0)).value); 
+		// the quantity of the orderLine for Poodle is set
+		Assert.assertEquals(1, getFeatureValue(orderLinePoodle, "quantity").size());
+		// liz ordered 1 Poodle
 		Assert.assertEquals(1,
 				((IntegerValue) getFeatureValue(orderLinePoodle, "quantity")
-						.get(0)).value);
+						.get(0)).value); 
 
-		Set<Link> orderCustomerLinks = getLinks(executor, "order_customer_1");
-		Assert.assertEquals(1, orderCustomerLinks.size());
-		Link orderCustomerLink = orderCustomerLinks.iterator().next();
-		Assert.assertEquals(liz,
-				((Reference) getFeatureValue(orderCustomerLink, "customer")
-						.get(0)).referent);
-
-		// check carts: no cart objects or cart items should exist
 		Set<Object_> carts = getObjects(executor, "Cart");
-		Assert.assertEquals(0, carts.size());
+		// no cart exists
+		Assert.assertEquals(0, carts.size()); 
 
 		Set<Object_> cartitems = getObjects(executor, "CartItem");
-		Assert.assertEquals(0, cartitems.size());
+		// no cartItem exists
+		Assert.assertEquals(0, cartitems.size()); 		
 	}
 
 	private Object_ getItemByName(PapyrusModelExecutor executor, String name) {
