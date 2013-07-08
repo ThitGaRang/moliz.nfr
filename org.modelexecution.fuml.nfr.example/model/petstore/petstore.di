@@ -123,6 +123,12 @@
     <availablePage>
       <emfPageIdentifier href="petstore.notation#_TAvEAOciEeKIZug8Oz7Q7Q"/>
     </availablePage>
+    <availablePage>
+      <emfPageIdentifier href="petstore.notation#_zgxgIOfEEeKYGqqJU5zkGg"/>
+    </availablePage>
+    <availablePage>
+      <emfPageIdentifier href="petstore.notation#_07Yc8OfEEeKYGqqJU5zkGg"/>
+    </availablePage>
   </pageList>
   <sashModel currentSelection="//@sashModel/@windows.0/@children.0">
     <windows>
