@@ -19,8 +19,16 @@ import org.osgi.framework.BundleContext;
 public class NFRDebugPlugin extends AbstractUIPlugin {
 
 	public static final String ATT_MODEL_PATH = "ATT_MODEL_PATH"; //$NON-NLS-1$
-	public static final String ATT_MAIN_ACTIVITY_NAME = "ATT_MAIN_ACTIVITY_NAME"; //$NON-NLS-1$
-	public static final String PROCESS_FACTORY_ID = "org.modelexecution.fuml.nfr.debug.processFactory"; //$NON-NLS-1$
+		
+	// EG analysis specific attributes
+	public static final String ATT_EG_MAIN_ACTIVITY_NAME = "ATT_MAIN_ACTIVITY_NAME"; //$NON-NLS-1$
+	public static final String EG_PROCESS_FACTORY_ID = "org.modelexecution.fuml.nfr.debug.processFactory"; //$NON-NLS-1$
+
+	// QN analysis specific attributes
+	public static final String ATT_QN_ANALYIS_CONTEXT = "ATT_ANALYIS_CONTEXT"; //$NON-NLS-1$
+	public static final String ATT_QN_RESULT_PATH = "ATT_RESULT_PATH"; //$NON-NLS-1$
+	public static final String ATT_QN_SIMULATION_TIME = "ATT_SIMULATION_TIME"; //$NON-NLS-1$
+	public static final String QN_PROCESS_FACTORY_ID = "org.modelexecution.fuml.nfr.debug.qn.processFactory"; //$NON-NLS-1$
 	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.modelexecution.fuml.nfr.debug"; //$NON-NLS-1$

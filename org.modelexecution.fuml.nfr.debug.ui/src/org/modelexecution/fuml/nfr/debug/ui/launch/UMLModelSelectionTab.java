@@ -11,16 +11,14 @@
 package org.modelexecution.fuml.nfr.debug.ui.launch;
 
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.emf.common.ui.dialogs.WorkspaceResourceDialog;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,18 +27,13 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.papyrus.infra.core.sashwindows.di.PageList;
-import org.eclipse.papyrus.infra.core.sashwindows.di.SashWindowsMngr;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -55,27 +48,29 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.NamedElement;
 import org.modelexecution.fuml.nfr.debug.NFRDebugPlugin;
-import org.modelexecution.fumldebug.papyrus.util.DiResourceUtil;
+import org.modelexecution.fumldebug.ui.commons.provider.ActivityContentProvider;
 
-public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
+public abstract class UMLModelSelectionTab extends AbstractLaunchConfigurationTab {
 
-	private static final String DI = "di";
+	private static final String UML = "uml";
 	private static final String PLATFORM_RESOURCE = "platform:/resource";
 
 	protected Button browseWorkspaceButton;
 	protected Text uriText;
 	protected Button loadButton;
-	private Label mainActivityLabel;
+	private Label selectedModelElementLabel;
 	private TreeViewer modelTreeViewer;
 
 	private ResourceSet resourceSet;
-	private Resource diResource;
-	private NamedElement rootModelElement;
-	private Activity mainActivity;
+	private Resource umlResource;	
+	private EObject selectedModelElement;
+	
+	private List<EObject> selectableModelElements;
 
+	private boolean restoringModelResource = false;
+	
 	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -157,6 +152,7 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 		}
 
 		uriText = new Text(uriComposite, SWT.SINGLE | SWT.BORDER);
+		uriText.setEditable(false);
 		setURIText("");
 		if (uriText.getText().length() > 0) {
 			uriText.selectAll();
@@ -187,9 +183,9 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 			uriText.setLayoutData(gridData);
 		}
 
-		mainActivityLabel = new Label(parent, SWT.LEFT);
-		mainActivityLabel.setText("Select main activity");
-		mainActivityLabel.setVisible(false);
+		selectedModelElementLabel = new Label(parent, SWT.LEFT);
+		selectedModelElementLabel.setText("Select main activity");
+		selectedModelElementLabel.setVisible(false);
 		modelTreeViewer = new TreeViewer(parent);
 		GridData treeLayoutData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.GRAB_HORIZONTAL);
@@ -201,10 +197,8 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 				.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory
 				.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-		modelTreeViewer.setContentProvider(new AdapterFactoryContentProvider(
-				adapterFactory));
-		modelTreeViewer.setLabelProvider(new AdapterFactoryLabelProvider(
-				adapterFactory));
+		modelTreeViewer.setContentProvider(new ActivityContentProvider(true));
+		modelTreeViewer.setLabelProvider(new ActivityLabelProvider());
 		modelTreeViewer.getTree().setEnabled(false);
 		modelTreeViewer
 				.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -213,40 +207,15 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 						String text = uriText.getText();
 						loadButton.setEnabled(text != null
 								&& text.trim().length() > 0);
-						loadActivityFromSelection(event.getSelection());
-						updateLaunchConfigurationDialog();
+						selectedModelElement = loadModelElementFromSelection(event.getSelection());
+						if(!restoringModelResource) {
+							updateLaunchConfigurationDialog();
+						}
 					}
 				});
 	}
 
-	protected void loadActivityFromSelection(ISelection selection) {
-		mainActivity = null;
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-			structuredSelection.size();
-			for (Iterator<?> iter = structuredSelection.iterator(); iter
-					.hasNext();) {
-				Object next = iter.next();
-				if (next instanceof Activity) {
-					mainActivity = (Activity) next;
-				}
-			}
-		}
-	}
-
-	private void updateEClassTreeViewer() {
-		if (haveModel()) {
-			modelTreeViewer.getTree().setEnabled(true);
-			modelTreeViewer.setInput(rootModelElement);
-			modelTreeViewer.refresh(true);
-			modelTreeViewer.getTree().setVisible(true);
-			mainActivityLabel.setVisible(true);
-		} else {
-			modelTreeViewer.getTree().setEnabled(false);
-			modelTreeViewer.getTree().setVisible(false);
-			mainActivityLabel.setVisible(false);
-		}
-	}
+	abstract protected EObject loadModelElementFromSelection(ISelection selection);	
 
 	private void uriTextModified(String text) {
 		setErrorMessage(null);
@@ -260,7 +229,7 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 			public boolean select(Viewer viewer, Object parentElement,
 					Object element) {
 				return !(element instanceof IFile)
-						|| DI.equals(((IFile) element).getFileExtension());
+						|| UML.equals(((IFile) element).getFileExtension());
 			}
 		};
 
@@ -288,31 +257,40 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 		}
 	}
 
-	protected boolean loadModel() {
+	private boolean loadModel() {
 		if (uriText.getText().startsWith("platform:/")) {
 			resourceSet = new ResourceSetImpl();
-			diResource = resourceSet.getResource(URI.createPlatformResourceURI(
+			umlResource = resourceSet.getResource(URI.createPlatformResourceURI(
 					uriText.getText().replace(PLATFORM_RESOURCE, ""), true),
 					true);
-			SashWindowsMngr sashWindowMngr = DiResourceUtil
-					.obtainSashWindowMngr(diResource);
-			PageList pageList = sashWindowMngr.getPageList();
-			rootModelElement = DiResourceUtil.obtainFirstNamedElement(pageList);
+			selectableModelElements = obtainSelectableModelElements(umlResource);
 		}
 		updateEClassTreeViewer();
 		return haveModel();
 	}
 
-	private boolean haveModel() {
-		return rootModelElement != null;
-	}
+	abstract protected List<EObject> obtainSelectableModelElements(Resource umlResource);	
+	
+	private void updateEClassTreeViewer() {
+		if (haveModel()) {
+			modelTreeViewer.getTree().setEnabled(true);			
+			modelTreeViewer.setInput(selectableModelElements.toArray());
+			modelTreeViewer.refresh(true);
+			modelTreeViewer.getTree().setVisible(true);
+			selectedModelElementLabel.setVisible(true);
+		} else {
+			modelTreeViewer.getTree().setEnabled(false);
+			modelTreeViewer.getTree().setVisible(false);
+			selectedModelElementLabel.setVisible(false);
+		}
+	}	
 
 	@Override
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		if (!haveModel()) {
 			setErrorMessage("Select a model resource.");
 			return false;
-		} else if (!isMainActivitySelected()) {
+		} else if (!isModelElementSelected()) {
 			setErrorMessage("Selected a main activity.");
 			return false;
 		} else {
@@ -321,26 +299,14 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 			return super.isValid(launchConfig);
 		}
 	}
-
-	private boolean isMainActivitySelected() {
-		return mainActivity != null;
+	
+	private boolean haveModel() {
+		return umlResource != null;
 	}
 
-	@Override
-	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID,
-				NFRDebugPlugin.PROCESS_FACTORY_ID);
-		configuration.setAttribute(NFRDebugPlugin.ATT_MODEL_PATH, uriText
-				.getText().trim());
-		configuration.setAttribute(NFRDebugPlugin.ATT_MAIN_ACTIVITY_NAME,
-				getMainActivityName());
-	}
-
-	private String getMainActivityName() {
-		if (mainActivity == null)
-			return "";
-		return mainActivity.getQualifiedName();
-	}
+	private boolean isModelElementSelected() {
+		return selectedModelElement != null;
+	}	
 
 	@Override
 	public String getName() {
@@ -353,35 +319,38 @@ public class ModelSelectionTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
+		restoringModelResource = true;
+		
 		String modelResource = "";
-		String activityName = "";
-
 		try {
 			modelResource = configuration.getAttribute(
 					NFRDebugPlugin.ATT_MODEL_PATH, "");
-			activityName = configuration.getAttribute(
-					NFRDebugPlugin.ATT_MAIN_ACTIVITY_NAME, "");
 		} catch (CoreException e) {
 		}
 
 		uriText.setText(modelResource);
-		if (loadModel()) {
-			TreeIterator<EObject> iterator = rootModelElement.eAllContents();
-			while (iterator.hasNext()) {
-				EObject eObject = iterator.next();
-				if (eObject instanceof Activity) {
-					Activity activity = (Activity) eObject;
-					if (activity.getQualifiedName().equals(activityName)) {
-						mainActivity = activity;
-						break;
-					}
-				}
-			}
+		
+		boolean loaded = loadModel();
+		restoringModelResource = false;
+		if (loaded) {
+			selectedModelElement = initializeSelectedModelElement(configuration);			
 		}
-		if (mainActivity != null) {
-			ISelection selection = new StructuredSelection(mainActivity);
+		if (selectedModelElement != null) {
+			ISelection selection = new StructuredSelection(selectedModelElement);
 			modelTreeViewer.setSelection(selection);
 		}
+		updateLaunchConfigurationDialog();
+	}
+
+	abstract protected NamedElement initializeSelectedModelElement(
+			ILaunchConfiguration configuration);
+	
+	public List<EObject> getSelectableModelElements() {
+		return selectableModelElements;
+	}
+	
+	public EObject getSelectedModelElement() {
+		return selectedModelElement;
 	}
 
 }

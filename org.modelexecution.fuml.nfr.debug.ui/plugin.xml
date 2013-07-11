@@ -8,6 +8,11 @@
             id="org.modelexecution.fuml.nfr.debug.ui.launchConfigurationTabGroup"
             type="org.modelexecution.fuml.nfr.debug.launchConfigurationType">
       </launchConfigurationTabGroup>
+      <launchConfigurationTabGroup
+            class="org.modelexecution.fuml.nfr.debug.ui.launch.NFRQNLaunchConfigurationTabGroup"
+            id="org.modelexecution.fuml.nfr.debug.ui.qn.launchConfigurationTabGroup"
+            type="org.modelexecution.fuml.nfr.debug.qn.launchConfigurationType">
+      </launchConfigurationTabGroup>
    </extension>
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
@@ -15,6 +20,11 @@
             configTypeID="org.modelexecution.fuml.nfr.debug.launchConfigurationType"
             icon="icons/NFRLaunch.png"
             id="org.modelexecution.fuml.nfr.debug.ui.launchConfigurationTypeImage">
+      </launchConfigurationTypeImage>
+      <launchConfigurationTypeImage
+            configTypeID="org.modelexecution.fuml.nfr.debug.qn.launchConfigurationType"
+            icon="icons/NFRLaunch.png"
+            id="org.modelexecution.fuml.nfr.debug.ui.qn.launchConfigurationTypeImage">
       </launchConfigurationTypeImage>
    </extension>
 

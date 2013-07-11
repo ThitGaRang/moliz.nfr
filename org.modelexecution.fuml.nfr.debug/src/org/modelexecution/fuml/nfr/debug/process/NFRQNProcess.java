@@ -26,19 +26,20 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamsProxy;
 import org.modelexecution.fuml.nfr.debug.internal.process.InternalNFRProcess;
+import org.modelexecution.fuml.nfr.debug.internal.process.InternalNFRQNProcess;
 import org.modelexecution.fuml.nfr.debug.logger.ConsoleLogger;
 
-public class NFRProcess extends PlatformObject implements IProcess {
+public class NFRQNProcess extends PlatformObject implements IProcess {
 
 	private ILaunch launch;
-	private InternalNFRProcess internalProcess;
+	private InternalNFRQNProcess internalProcess;
 	private String name;
 	@SuppressWarnings("rawtypes")
 	private Map attributes;
 
 	private ConsoleLogger consoleLogger = new ConsoleLogger();
 
-	public NFRProcess(ILaunch launch, Process process, String name,
+	public NFRQNProcess(ILaunch launch, Process process, String name,
 			@SuppressWarnings("rawtypes") Map attributes) {
 		setFields(launch, process, name, attributes);
 		if (!isInDebugMode()) {
@@ -50,9 +51,9 @@ public class NFRProcess extends PlatformObject implements IProcess {
 	
 	private void printAnalysisResult() {
 		try {
-			String result = internalProcess.getAnalysisResult().toString();
-			consoleLogger.write(result);
+			consoleLogger.write("QN process ready");
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -60,15 +61,15 @@ public class NFRProcess extends PlatformObject implements IProcess {
 	private void setFields(ILaunch launch, Process process, String name,
 			@SuppressWarnings("rawtypes") Map attributes) {
 		this.launch = launch;
-		assertNFRProcess(process);
-		this.internalProcess = (InternalNFRProcess) process;
+		assertNFRQNProcess(process);
+		this.internalProcess = (InternalNFRQNProcess) process;
 		launch.addProcess(this);
 		this.name = name;
 		this.attributes = attributes;
 	}
 
-	private void assertNFRProcess(Process process) {
-		Assert.isTrue(process instanceof InternalNFRProcess);
+	private void assertNFRQNProcess(Process process) {
+		Assert.isTrue(process instanceof InternalNFRQNProcess);
 	}
 
 	private boolean isInDebugMode() {
@@ -87,7 +88,8 @@ public class NFRProcess extends PlatformObject implements IProcess {
 
 	@Override
 	public boolean isTerminated() {
-		return internalProcess.isTerminated();
+		// TODO return internalProcess.isTerminated();
+		return false;
 	}
 
 	@Override
@@ -162,13 +164,6 @@ public class NFRProcess extends PlatformObject implements IProcess {
 			return this;
 		}
 		if (adapter.equals(IDebugTarget.class)) {
-			ILaunch launch = getLaunch();
-			IDebugTarget[] targets = launch.getDebugTargets();
-			for (int i = 0; i < targets.length; i++) {
-				if (this.equals(targets[i].getProcess())) {
-					return targets[i];
-				}
-			}
 			return null;
 		}
 		if (adapter.equals(ILaunch.class)) {

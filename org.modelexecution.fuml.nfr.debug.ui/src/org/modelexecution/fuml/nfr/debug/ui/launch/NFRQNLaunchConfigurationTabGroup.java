@@ -16,13 +16,13 @@ import org.eclipse.debug.ui.EnvironmentTab;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 
-public class NFRLaunchConfigurationTabGroup extends
+public class NFRQNLaunchConfigurationTabGroup extends
 		AbstractLaunchConfigurationTabGroup {
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
-				new EGModelSelectionTab(), new EnvironmentTab(), new CommonTab() };
+				new QNModelSelectionTab(), new AnalysisTab(), new EnvironmentTab(), new CommonTab() };
 		setTabs(tabs);
 	}
 

@@ -17,22 +17,24 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.modelexecution.fuml.nfr.debug.NFRDebugPlugin;
-import org.modelexecution.fuml.nfr.debug.internal.process.InternalNFRProcess;
+import org.modelexecution.fuml.nfr.debug.internal.process.InternalNFRQNProcess;
 
-public class NFRLaunchDelegate extends LaunchConfigurationDelegate {
+public class NFRQNLaunchDelegate extends LaunchConfigurationDelegate {
 
-	private static final String NFR_EXEC_LABEL = "NFR Execution Process";
+	private static final String NFR_QN_EXEC_LABEL = "NFR QN Execution Process";
 
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		String modelPath = getModelPath(configuration);
-		String mainActivityName = getMainActivityName(configuration);
+		String resultPath = getResultPath(configuration);
+		String analysisContext = getAnalysisContext(configuration);
+		int simulationTime = getSimulationTime(configuration);
 
-		InternalNFRProcess nfrProcess = new InternalNFRProcess(modelPath,
-				mainActivityName);
+		InternalNFRQNProcess process = new InternalNFRQNProcess(modelPath,
+				resultPath, analysisContext, simulationTime);
 
-		DebugPlugin.newProcess(launch, nfrProcess, NFR_EXEC_LABEL);
+		DebugPlugin.newProcess(launch, process, NFR_QN_EXEC_LABEL);
 	}
 
 	private String getModelPath(ILaunchConfiguration configuration)
@@ -41,10 +43,28 @@ public class NFRLaunchDelegate extends LaunchConfigurationDelegate {
 				(String) null);
 	}
 
-	private String getMainActivityName(ILaunchConfiguration configuration)
+	private String getAnalysisContext(ILaunchConfiguration configuration)
 			throws CoreException {
 		return configuration.getAttribute(
-				NFRDebugPlugin.ATT_EG_MAIN_ACTIVITY_NAME, (String) null);
+				NFRDebugPlugin.ATT_QN_ANALYIS_CONTEXT, (String) null);
+	}
+
+	private String getResultPath(ILaunchConfiguration configuration)
+			throws CoreException {
+		return configuration.getAttribute(NFRDebugPlugin.ATT_QN_RESULT_PATH,
+				(String) null);
+	}
+
+	private int getSimulationTime(ILaunchConfiguration configuration)
+			throws CoreException {
+		int simulationTime = 0;
+		String simulationTimeString = configuration.getAttribute(
+				NFRDebugPlugin.ATT_QN_SIMULATION_TIME, "");
+		try {
+			simulationTime = Integer.parseInt(simulationTimeString);
+		} catch (NumberFormatException e) {			
+		}
+		return simulationTime;
 	}
 
 	@Override

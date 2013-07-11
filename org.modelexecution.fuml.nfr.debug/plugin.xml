@@ -9,9 +9,19 @@
             modes="run"
             name="nfr">
       </launchConfigurationType>
+      <launchConfigurationType
+            delegate="org.modelexecution.fuml.nfr.debug.launch.NFRQNLaunchDelegate"
+            id="org.modelexecution.fuml.nfr.debug.qn.launchConfigurationType"
+            modes="run"
+            name="qn">
+      </launchConfigurationType>
    </extension>
    <extension
          point="org.eclipse.debug.core.processFactories">
+      <processFactory
+            class="org.modelexecution.fuml.nfr.debug.process.NFRQNProcessFactory"
+            id="org.modelexecution.fuml.nfr.debug.qn.processFactory">
+      </processFactory>
       <processFactory
             class="org.modelexecution.fuml.nfr.debug.process.NFRProcessFactory"
             id="org.modelexecution.fuml.nfr.debug.processFactory">
