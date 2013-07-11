@@ -8,18 +8,18 @@ import java.util.Set;
 import org.eclipse.emf.ecore.resource.Resource;
 
 public class MarteAnalysis {
-	private Resource modelResource;
+	private Resource umlModelResource;
 	private Set<MarteService> services;
 	private List<MarteTrace> traces;
 	
-	public MarteAnalysis(Resource modelResource) {
-		this.modelResource = modelResource;
+	public MarteAnalysis(Resource umlModelResource) {
+		this.umlModelResource = umlModelResource;
 		services = new HashSet<MarteService>();
 		traces = new ArrayList<MarteTrace>();
 	}
 	
-	public MarteAnalysis(Resource modelResource, Set<MarteService> services, List<MarteTrace> scenarios) {
-		this.modelResource = modelResource;
+	public MarteAnalysis(Resource umlModelResource, Set<MarteService> services, List<MarteTrace> scenarios) {
+		this.umlModelResource = umlModelResource;
 		this.services = services;
 		this.traces = scenarios;
 	}
@@ -48,8 +48,8 @@ public class MarteAnalysis {
 		this.traces.add(scenario);
 	}
 	
-	public Resource getModelResource() {
-		return modelResource;
+	public Resource getUMLModelResource() {
+		return umlModelResource;
 	}
 
 	@Override

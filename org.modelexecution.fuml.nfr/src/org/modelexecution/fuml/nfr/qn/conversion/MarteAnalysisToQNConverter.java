@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import org.eclipse.papyrus.MARTE_Library.GRM_BasicTypes.SchedPolicyKind;
 import org.modelexecution.fuml.nfr.qn.MarteAnalysis;
 import org.modelexecution.fuml.nfr.qn.MarteService;
@@ -13,11 +12,12 @@ import org.modelexecution.fuml.nfr.qn.MarteTraceStep;
 import org.modelexecution.fuml.nfr.qn.arrival.ArrivalTimeGeneratorFactory;
 import org.modelexecution.fuml.nfr.qn.arrival.IArrivalTimeGenerator;
 
+import at.ac.tuwien.big.simpleqn.FixedBalancer;
 import at.ac.tuwien.big.simpleqn.Job;
 import at.ac.tuwien.big.simpleqn.QueuingNet;
 import at.ac.tuwien.big.simpleqn.Request;
 import at.ac.tuwien.big.simpleqn.Service;
-import at.ac.tuwien.big.simpleqn.FixedBalancer;
+import at.ac.tuwien.big.simpleqn.strategies.RandomBalancing;
 import at.ac.tuwien.big.simpleqn.strategies.RoundRobinBalancing;
 
 public class MarteAnalysisToQNConverter {
@@ -27,16 +27,18 @@ public class MarteAnalysisToQNConverter {
 	private Service createServiceFrom(MarteService resource) {
 		if(resource.getMultiplicity() == 1 || resource.getSchedulingPolicy() == null)
 			return new Service(resource.getName(), resource.getDefaultServiceTime());
-		//else if(resource.getSchedulingPolicy() == SchedPolicyKind.ROUND_ROBIN)
-			//return new FixedBalancer(resource.getName(), resource.getDefaultServiceTime(), new RoundRobinBalancing(0), resource.getMultiplicity());
-			
+		else if(resource.getSchedulingPolicy() == SchedPolicyKind.ROUND_ROBIN)
+			return new FixedBalancer(resource.getName(), resource.getDefaultServiceTime(), new RoundRobinBalancing(0), resource.getMultiplicity());
+		else if(resource.getSchedulingPolicy() == SchedPolicyKind.OTHER)
+			return new FixedBalancer(resource.getName(), resource.getDefaultServiceTime(), new RandomBalancing(0), resource.getMultiplicity());
+		
 		return new Service(resource.getName(), resource.getDefaultServiceTime());
 	}
 	
 	public MarteAnalysisToQNConversion convertToQueuingNet(MarteAnalysis analysis, int simulationTime) {
 		if(analysis == null)
 			return null;
-		
+
 		Map<MarteService, Service> marteToQNService = new HashMap<MarteService, Service>();
 		Map<Service, MarteService> qnToMarteService = new HashMap<Service, MarteService>();
 

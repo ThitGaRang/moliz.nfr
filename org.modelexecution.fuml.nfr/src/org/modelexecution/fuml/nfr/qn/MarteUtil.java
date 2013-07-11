@@ -1,8 +1,11 @@
 package org.modelexecution.fuml.nfr.qn;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.NamedElement;
@@ -84,7 +87,18 @@ public class MarteUtil {
 			umlElement.applyStereotype(newStereotype);
 			umlElement.setValue(newStereotype, featureName, value);
 		} else {
-			appliedStereotype.eSet(appliedStereotype.eClass().getEStructuralFeature(featureName), value);
+			Object existingValue = appliedStereotype.eGet(appliedStereotype.eClass().getEStructuralFeature(featureName));
+			Object newValue = value;
+			if(existingValue instanceof EList) {
+				// do not work on existing list as all content will be cleared when trying to set it as feature value
+				EList newValues = new BasicEList((EList)existingValue);
+				if(value instanceof EList)
+					newValues.addAll((EList) value);
+				else
+					((EList)existingValue).add(value);
+				newValue = newValues;
+			}	
+			appliedStereotype.eSet(appliedStereotype.eClass().getEStructuralFeature(featureName), newValue);
 		}
 		
 		return MarteUtil.getExactStereotype(umlElement, clazz);
