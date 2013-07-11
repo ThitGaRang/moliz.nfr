@@ -4499,7 +4499,7 @@
   <HLAM:RtUnit xmi:id="_r8DAAOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_vREQoN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
   <HLAM:RtUnit xmi:id="_tjBk4OisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_wDqLMN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
   <GRM:Resource xmi:id="_tjNyIOisEeKKXKUvUuCjmg" base_Classifier="_wDqLMN_QEeKxs-T-7hfQjA"/>
-  <HLAM:RtUnit xmi:id="_uyj6IOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_w-kUQN_QEeKxs-T-7hfQjA" queueSchedPolicy="FIFO"/>
+  <HLAM:RtUnit xmi:id="_uyj6IOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_w-kUQN_QEeKxs-T-7hfQjA" queueSchedPolicy="Other"/>
   <GRM:Resource xmi:id="_uyu5QOisEeKKXKUvUuCjmg" base_Classifier="_w-kUQN_QEeKxs-T-7hfQjA"/>
   <HLAM:RtUnit xmi:id="_xVg_EOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="3" base_BehavioredClassifier="_zO4KAN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
   <GRM:Resource xmi:id="_xVtMUOisEeKKXKUvUuCjmg" base_Classifier="_zO4KAN_QEeKxs-T-7hfQjA"/>

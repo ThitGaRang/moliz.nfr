@@ -5,7 +5,6 @@ import org.eclipse.uml2.uml.NamedElement;
 
 public class MarteService {
 	private NamedElement umlElement;
-	private String name;
 	private int multiplicity;
 	private SchedPolicyKind schedulingPolicy;
 	private int defaultServiceTime = 1;
@@ -63,6 +62,6 @@ public class MarteService {
 	
 	@Override
 	public String toString() {
-		return getMultiplicity() + " x " + getName() + " from " + getUmlElement().getQualifiedName() + " with " + getSchedulingPolicy() + " (default service time: " + getDefaultServiceTime() + ")";
+		return getMultiplicity() + " x " + getName() + " with " + getSchedulingPolicy() + " (default service time: " + getDefaultServiceTime() + ")";
 	}
 }

@@ -28,43 +28,33 @@ import org.modelexecution.fumldebug.debugger.uml.UMLModelLoader;
 
 public class MarteAnalyzer {	
 	private UMLModelLoader loader;
+	private GaAnalysisContext context;
+	private String modelPath;
 	private Set<MarteService> services;
 	private List<GaWorkloadEvent> workloadEvents;
 	
-	public MarteAnalyzer() { }
+	public MarteAnalyzer(String modelPath) {
+		setModel(modelPath);
+		loader = new UMLModelLoader().setModel(modelPath);
+	}
 	
 	public MarteAnalyzer setModel(String modelPath) {
-		loader = new UMLModelLoader().setModel(modelPath).loadModel();
-		GaAnalysisContext context = getAnalysisContext();
-		if(context != null) {
-			services = extractServices(context);
-			workloadEvents = extractWorkloadEvents(context);
-		} else {
-			NamedElement rootElement = getLoader().obtainFirstNamedElement();
-			services = extractServices(rootElement, new HashSet<MarteService>());
-			workloadEvents = extractWorkloadEvents(rootElement, new ArrayList<GaWorkloadEvent>());
-		}
+		this.modelPath = modelPath;
 		return this;
 	}		
 	
 	public MarteAnalyzer setAnalysisContext(String analysisContextQN) {
-		GaAnalysisContext context = getAnalysisContext(analysisContextQN);
-		
-		if(context == null)
-			return this;
-		
-		services = extractServices(context);
-		workloadEvents = extractWorkloadEvents(context);
-		return this;
+		return setAnalysisContext(extractAnalysisContext(analysisContextQN));
 	}
 	
 	public MarteAnalyzer setAnalysisContext(GaAnalysisContext context) {
-		if(context == null)
-			return this;
-		
-		services = extractServices(context);
-		workloadEvents = extractWorkloadEvents(context);
+		this.context = context;
 		return this;
+	}
+	
+
+	private GaAnalysisContext getAnalysisContext() {
+		return context;
 	}
 	
 	private MarteService getServiceFrom(Resource resource) {
@@ -144,8 +134,29 @@ public class MarteAnalyzer {
 		return loader;
 	}
 	
+	private void extractServicesAndWorkloadEvents() {
+		getLoader().setModel(modelPath).loadModel();
+		GaAnalysisContext analysisContext = getAnalysisContext();
+		if(analysisContext == null) {
+			// no valid analysis context was given, try to extract
+			analysisContext = extractAnalysisContext();
+		}
+		if(analysisContext != null) {
+			// get services and workload events referenced by context
+			services = extractServices(analysisContext);
+			workloadEvents = extractWorkloadEvents(analysisContext);
+		} else {
+			// extract services and workload events from model 
+			NamedElement rootElement = getLoader().obtainFirstNamedElement();
+			services = extractServices(rootElement, new HashSet<MarteService>());
+			workloadEvents = extractWorkloadEvents(rootElement, new ArrayList<GaWorkloadEvent>());
+		}
+	}
+	
 	public MarteAnalysis analyzeScenarios() {
-		MarteAnalysis analyis = new MarteAnalysis(loader.getUMLModelResource());
+		extractServicesAndWorkloadEvents();
+		
+		MarteAnalysis analyis = new MarteAnalysis(getLoader().getUMLModelResource());
 		analyis.setServices(getServices());
 		
 		UMLModelExecutor executor = new UMLModelExecutor(getLoader());
@@ -218,7 +229,6 @@ public class MarteAnalyzer {
 	private List<MarteTraceStep> extractSteps(GaScenario scenario, Trace trace) {
 		List<MarteTraceStep> steps = new ArrayList<MarteTraceStep>();
 		ActivityExecution rootActivityExecution = extractRootActivityExecution(scenario, trace);
-//		ActivityNodeExecution rootNodeExecution = extractRootNodeExecution(scenario, trace);
 		extractSteps(rootActivityExecution, steps);		
 		return steps;
 	}
@@ -265,14 +275,14 @@ public class MarteAnalyzer {
 		return null;
 	}
 	
-	private GaAnalysisContext getAnalysisContext() {		
-		TreeIterator<EObject> modelContents = loader.getUMLModelResource().getAllContents();
+	private GaAnalysisContext extractAnalysisContext() {
+		TreeIterator<EObject> modelContents = getLoader().loadModel().getUMLModelResource().getAllContents();
 		while(modelContents.hasNext()) {
-			EObject eObject = modelContents.next();			
+			EObject eObject = modelContents.next();
 			if(eObject instanceof Element) {
 				Element element = (Element)eObject;
 				GaAnalysisContext context = MarteUtil.getExactStereotype(element, GaAnalysisContext.class);
-				if (context != null) {
+				if (context != null && context.getPlatform() != null && context.getWorkload() != null) {
 					return context;
 				}
 			}			
@@ -280,8 +290,8 @@ public class MarteAnalyzer {
 		return null;
 	}
 	
-	private GaAnalysisContext getAnalysisContext(String analysisContextQN) {
-		TreeIterator<EObject> modelContents = loader.getUMLModelResource().getAllContents();
+	private GaAnalysisContext extractAnalysisContext(String analysisContextQN) {
+		TreeIterator<EObject> modelContents = getLoader().loadModel().getUMLModelResource().getAllContents();
 		while(modelContents.hasNext()) {
 			EObject eObject = modelContents.next();			
 			if(eObject instanceof NamedElement) {
