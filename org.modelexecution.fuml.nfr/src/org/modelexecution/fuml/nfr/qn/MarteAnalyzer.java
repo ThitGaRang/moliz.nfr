@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaAnalysisContext;
 import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaResourcesPlatform;
 import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaScenario;
@@ -21,17 +23,19 @@ import org.modelexecution.fumldebug.core.trace.tracemodel.ActivityExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.ActivityNodeExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.CallActionExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.Trace;
+import org.modelexecution.fumldebug.debugger.uml.UMLModelExecutor;
+import org.modelexecution.fumldebug.debugger.uml.UMLModelLoader;
 
 public class MarteAnalyzer {	
-	private PapyrusModelLoader loader;
+	private UMLModelLoader loader;
 	private Set<MarteService> services;
 	private List<GaWorkloadEvent> workloadEvents;
 	
 	public MarteAnalyzer() { }
 	
 	public MarteAnalyzer setModel(String modelPath) {
-		loader = new PapyrusModelLoader().setModel(modelPath).loadModel();
-		GaAnalysisContext context = getAnalysisContext(getLoader().obtainFirstNamedElement());
+		loader = new UMLModelLoader().setModel(modelPath).loadModel();
+		GaAnalysisContext context = getAnalysisContext();
 		if(context != null) {
 			services = extractServices(context);
 			workloadEvents = extractWorkloadEvents(context);
@@ -40,6 +44,17 @@ public class MarteAnalyzer {
 			services = extractServices(rootElement, new HashSet<MarteService>());
 			workloadEvents = extractWorkloadEvents(rootElement, new ArrayList<GaWorkloadEvent>());
 		}
+		return this;
+	}		
+	
+	public MarteAnalyzer setAnalysisContext(String analysisContextQN) {
+		GaAnalysisContext context = getAnalysisContext(analysisContextQN);
+		
+		if(context == null)
+			return this;
+		
+		services = extractServices(context);
+		workloadEvents = extractWorkloadEvents(context);
 		return this;
 	}
 	
@@ -125,15 +140,15 @@ public class MarteAnalyzer {
 		return services;
 	}
 	
-	private PapyrusModelLoader getLoader() {
+	private UMLModelLoader getLoader() {
 		return loader;
 	}
 	
 	public MarteAnalysis analyzeScenarios() {
-		MarteAnalysis analyis = new MarteAnalysis(loader.getDiModelResource());
+		MarteAnalysis analyis = new MarteAnalysis(loader.getUMLModelResource());
 		analyis.setServices(getServices());
 		
-		PapyrusModelExecutor executor = new PapyrusModelExecutor(getLoader());
+		UMLModelExecutor executor = new UMLModelExecutor(getLoader());
 		for(GaWorkloadEvent event : getWorkloadEvents())
 			if(event.getEffect() != null) {				
 				analyis.addTrace(new MarteTrace(event, 
@@ -250,19 +265,33 @@ public class MarteAnalyzer {
 		return null;
 	}
 	
-	private GaAnalysisContext getAnalysisContext(NamedElement element) {
-		if(element == null)
-			return null;
-		GaAnalysisContext context = MarteUtil.getExactStereotype(element, GaAnalysisContext.class);
-		if(context != null)
-			return context;
-		
-		for(Element child : element.getOwnedElements())
-			if(child instanceof NamedElement) {
-				context = getAnalysisContext((NamedElement) child);
-				if(context != null)
+	private GaAnalysisContext getAnalysisContext() {		
+		TreeIterator<EObject> modelContents = loader.getUMLModelResource().getAllContents();
+		while(modelContents.hasNext()) {
+			EObject eObject = modelContents.next();			
+			if(eObject instanceof Element) {
+				Element element = (Element)eObject;
+				GaAnalysisContext context = MarteUtil.getExactStereotype(element, GaAnalysisContext.class);
+				if (context != null) {
 					return context;
-			}
+				}
+			}			
+		}		
+		return null;
+	}
+	
+	private GaAnalysisContext getAnalysisContext(String analysisContextQN) {
+		TreeIterator<EObject> modelContents = loader.getUMLModelResource().getAllContents();
+		while(modelContents.hasNext()) {
+			EObject eObject = modelContents.next();			
+			if(eObject instanceof NamedElement) {
+				NamedElement element = (NamedElement)eObject;
+				GaAnalysisContext context = MarteUtil.getExactStereotype(element, GaAnalysisContext.class);
+				if (context != null && element.getQualifiedName().equals(analysisContextQN)) {
+					return context;
+				}
+			}			
+		}		
 		return null;
 	}
 }

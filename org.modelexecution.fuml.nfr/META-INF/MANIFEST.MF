@@ -12,7 +12,8 @@ Require-Bundle: org.modelexecution.fumldebug;bundle-version="1.0.0";visibility:=
  org.eclipse.papyrus.marte.properties;bundle-version="0.9.1";visibility:=reexport,
  org.eclipse.papyrus.marte.static.profile;bundle-version="0.9.1";visibility:=reexport,
  org.eclipse.papyrus.marte.vsl;bundle-version="0.9.1";visibility:=reexport,
- at.ac.tuwien.big.simpleqn;bundle-version="1.0.0"
+ at.ac.tuwien.big.simpleqn;bundle-version="1.0.0",
+ org.modelexecution.fumldebug.uml;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.modelexecution.fuml.nfr,
  org.modelexecution.fuml.nfr.internal,

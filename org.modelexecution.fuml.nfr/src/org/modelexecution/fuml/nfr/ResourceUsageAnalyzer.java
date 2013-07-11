@@ -11,7 +11,7 @@ package org.modelexecution.fuml.nfr;
 
 import org.modelexecution.fuml.convert.IConversionResult;
 import org.modelexecution.fumldebug.core.trace.tracemodel.Trace;
-import org.modelexecution.fumldebug.papyrus.PapyrusModelExecutor;
+import org.modelexecution.fumldebug.debugger.uml.UMLModelExecutor;
 
 import fUML.Semantics.Classes.Kernel.Object_;
 import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
@@ -19,18 +19,18 @@ import fUML.Semantics.CommonBehaviors.BasicBehaviors.ParameterValueList;
 public class ResourceUsageAnalyzer {
 
 	private boolean isRunning = false;
-	private PapyrusModelExecutor executor;
+	private UMLModelExecutor executor;
 
 	public ResourceUsageAnalyzer(String modelPath) {
-		executor = new PapyrusModelExecutor(modelPath);
+		executor = new UMLModelExecutor(modelPath);
 	}
 
 	public ResourceUsageAnalysis runAnalysis(String activityName,
 			Object_ context, ParameterValueList parameterValues) {
 		isRunning = true;
 		Trace trace = executor.executeActivity(activityName, context,
-				parameterValues);
-		IConversionResult mapping = executor.getConversionResult();
+				parameterValues);		
+		IConversionResult mapping = executor.getModelLoader().getConversionResult();
 		ResourceUsageAnalysis analysis = new ResourceUsageAnalysis(trace, mapping);
 		isRunning = false;
 		return analysis; 
