@@ -5,16 +5,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.resource.Resource;
+
 public class MarteAnalysis {
+	private Resource modelResource;
 	private Set<MarteService> services;
 	private List<MarteTrace> traces;
 	
-	public MarteAnalysis() {
+	public MarteAnalysis(Resource modelResource) {
+		this.modelResource = modelResource;
 		services = new HashSet<MarteService>();
 		traces = new ArrayList<MarteTrace>();
 	}
 	
-	public MarteAnalysis(Set<MarteService> services, List<MarteTrace> scenarios) {
+	public MarteAnalysis(Resource modelResource, Set<MarteService> services, List<MarteTrace> scenarios) {
+		this.modelResource = modelResource;
 		this.services = services;
 		this.traces = scenarios;
 	}
@@ -35,12 +40,16 @@ public class MarteAnalysis {
 		return traces;
 	}
 
-	public void setScenarios(List<MarteTrace> scenarios) {
-		this.traces = scenarios;
+	public void setTraces(List<MarteTrace> traces) {
+		this.traces = traces;
 	}
 	
-	public void addScenario(MarteTrace scenario) {
+	public void addTrace(MarteTrace scenario) {
 		this.traces.add(scenario);
+	}
+	
+	public Resource getModelResource() {
+		return modelResource;
 	}
 
 	@Override
@@ -49,22 +58,19 @@ public class MarteAnalysis {
 		
 		builder.append("MarteAnalysis\n");
 		builder.append("-------------\n");
-		builder.append("Resources:\n");
-		for(MarteService resource : getServices()) 
-			builder.append("  " + resource + "\n");
+		
+		builder.append("Services:\n");
+		for(MarteService service : getServices())
+			builder.append("  " + service + "\n");
 		
 		builder.append("\n");
 		
 		builder.append("Traces:\n");
 		for(MarteTrace trace : getTraces()) {
-			builder.append("  " + trace.getScenario().getRoot().getBase_NamedElement().getQualifiedName());
-			builder.append(" of " + trace.getScenario().getBase_NamedElement().getQualifiedName());
-			builder.append(" with " + trace.getScenario().getCause().getPattern() + "\n");
-			
-			for(MarteTraceStep step : trace.getSteps()) {
-				String demand = step.getStep().getExecTime().size() > 0 ? step.getStep().getExecTime().get(0) : "0";
-				builder.append("    " + demand + "s " + step.getStep().getBase_NamedElement().getQualifiedName() + " on " + step.getService().getName() + "\n");
-			}
+			builder.append("  " + trace + "\n");			
+			for(MarteTraceStep step : trace.getSteps())
+				builder.append("    " + step  + "\n");				
+				
 			builder.append("\n");
 		}
 		return builder.toString();

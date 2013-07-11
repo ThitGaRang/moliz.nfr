@@ -13,9 +13,8 @@ public class MarteService {
 	public MarteService() {
 	}
 	
-	public MarteService(NamedElement umlElement, String name, int multiplicity, SchedPolicyKind schedulingPolicy) {
+	public MarteService(NamedElement umlElement, int multiplicity, SchedPolicyKind schedulingPolicy) {
 		setUmlElement(umlElement);
-		setName(name);
 		setMultiplicity(multiplicity);
 		setSchedulingPolicy(schedulingPolicy);
 	}
@@ -30,12 +29,9 @@ public class MarteService {
 	}
 
 	public String getName() {
-		return name;
-	}
-
-	public MarteService setName(String name) {
-		this.name = name;
-		return this;
+		if(getUmlElement() == null)
+			return "";
+		return getUmlElement().getName();
 	}
 
 	public int getMultiplicity() {

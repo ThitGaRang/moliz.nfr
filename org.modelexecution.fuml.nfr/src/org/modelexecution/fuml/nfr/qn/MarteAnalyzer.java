@@ -13,7 +13,6 @@ import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaWorkloadBehavior;
 import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaWorkloadEvent;
 import org.eclipse.papyrus.MARTE.MARTE_DesignModel.HLAM.RtUnit;
 import org.eclipse.papyrus.MARTE.MARTE_Foundations.GRM.Resource;
-import org.eclipse.papyrus.MARTE_Library.GRM_BasicTypes.SchedPolicyKind;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.Element;
@@ -23,9 +22,7 @@ import org.modelexecution.fumldebug.core.trace.tracemodel.ActivityNodeExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.CallActionExecution;
 import org.modelexecution.fumldebug.core.trace.tracemodel.Trace;
 
-public class MarteAnalyzer {
-	private static final SchedPolicyKind DEFAULT_SCHEDULING_POLICY = SchedPolicyKind.ROUND_ROBIN;
-	
+public class MarteAnalyzer {	
 	private PapyrusModelLoader loader;
 	private Set<MarteService> services;
 	private List<GaWorkloadEvent> workloadEvents;
@@ -46,34 +43,41 @@ public class MarteAnalyzer {
 		return this;
 	}
 	
+	public MarteAnalyzer setAnalysisContext(GaAnalysisContext context) {
+		if(context == null)
+			return this;
+		
+		services = extractServices(context);
+		workloadEvents = extractWorkloadEvents(context);
+		return this;
+	}
+	
 	private MarteService getServiceFrom(Resource resource) {
+		RtUnit rtUnit = MarteUtil.getFirstStereotype(resource.getBase_Classifier(), RtUnit.class); 
+		if(rtUnit != null)
+			return getServiceFrom(rtUnit);
+		
 		return new MarteService()
 			.setMultiplicity(Integer.parseInt(resource.getResMult()))
-			.setName(resource.getBase_Classifier().getQualifiedName())
-			.setUmlElement(resource.getBase_Classifier())
-			.setSchedulingPolicy(DEFAULT_SCHEDULING_POLICY);
+			.setUmlElement(resource.getBase_Classifier());
 	}
 	
 	private MarteService getServiceFrom(RtUnit rtUnit) {
 		if(rtUnit == null)
 			return null;
+		
 		return new MarteService()
 			.setUmlElement(rtUnit.getBase_BehavioredClassifier())
 			.setMultiplicity(rtUnit.getSrPoolSize())
-			.setName(rtUnit.getBase_BehavioredClassifier().getQualifiedName())
 			.setSchedulingPolicy(rtUnit.getQueueSchedPolicy());
 	}
 	
 	private Set<MarteService> extractServices(GaAnalysisContext context) {
 		Set<MarteService> resources = new HashSet<MarteService>();
 		for(GaResourcesPlatform platform : context.getPlatform())
-			for(Resource resource : platform.getResources()) {
-				RtUnit rtUnit = MarteUtil.getFirstStereotype(resource.getBase_Classifier(), RtUnit.class); 
-				if(rtUnit != null)
-					resources.add(getServiceFrom(rtUnit));
-				else
-					resources.add(getServiceFrom(resource));
-			}
+			for(Resource resource : platform.getResources()) 
+				resources.add(getServiceFrom(resource));
+				
 		return resources;
 	}
 	
@@ -117,7 +121,7 @@ public class MarteAnalyzer {
 		return workloadEvents;
 	}
 	
-	private Set<MarteService> getResources() {
+	private Set<MarteService> getServices() {
 		return services;
 	}
 	
@@ -126,13 +130,13 @@ public class MarteAnalyzer {
 	}
 	
 	public MarteAnalysis analyzeScenarios() {
-		MarteAnalysis analyis = new MarteAnalysis();
-		analyis.setServices(getResources());
+		MarteAnalysis analyis = new MarteAnalysis(loader.getDiModelResource());
+		analyis.setServices(getServices());
 		
 		PapyrusModelExecutor executor = new PapyrusModelExecutor(getLoader());
 		for(GaWorkloadEvent event : getWorkloadEvents())
 			if(event.getEffect() != null) {				
-				analyis.addScenario(new MarteTrace(event, 
+				analyis.addTrace(new MarteTrace(event, 
 						extractSteps(event.getEffect(), 
 								executor.executeActivity(event.getEffect().getBase_NamedElement().getQualifiedName()))));
 				
@@ -189,7 +193,7 @@ public class MarteAnalyzer {
 	}
 	
 	private MarteService findResource(GaStep step) {
-		for(MarteService resource : getResources()) {
+		for(MarteService resource : getServices()) {
 			if(step.getBase_NamedElement().getQualifiedName().startsWith(resource.getUmlElement().getQualifiedName()))
 				return resource;
 		}

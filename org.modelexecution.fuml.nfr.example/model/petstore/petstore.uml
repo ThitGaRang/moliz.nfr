@@ -4494,7 +4494,7 @@
   <PAM:PaStep xmi:id="_j1VFwOcmEeKcMLN1_kznIQ" base_NamedElement="_rbz2UOcjEeKIZug8Oz7Q7Q" base_Action="_rbz2UOcjEeKIZug8Oz7Q7Q" blockT="">
     <hostDemand>(4.2,ms)</hostDemand>
   </PAM:PaStep>
-  <HwComputing:HwComputingResource xmi:id="_ojHVUOisEeKKXKUvUuCjmg" base_Classifier="_mFElkOisEeKKXKUvUuCjmg"/>
+  <HwComputing:HwComputingResource xmi:id="_ojHVUOisEeKKXKUvUuCjmg" base_Classifier="_mFElkOisEeKKXKUvUuCjmg" op_Frequencies=""/>
   <GRM:Resource xmi:id="_r7x6QOisEeKKXKUvUuCjmg" base_Classifier="_vREQoN_QEeKxs-T-7hfQjA"/>
   <HLAM:RtUnit xmi:id="_r8DAAOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_vREQoN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
   <HLAM:RtUnit xmi:id="_tjBk4OisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_wDqLMN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
@@ -4557,4 +4557,5 @@
   <GQAM:GaStep xmi:id="_Sm9xoOitEeKKXKUvUuCjmg" base_NamedElement="_m92LEOfEEeKYGqqJU5zkGg" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
     <execTime>2</execTime>
   </GQAM:GaStep>
+  <HwComputing:HwProcessor xmi:id="_9GKXAOl6EeKOXJTAqG5k1Q" base_Classifier="_mFElkOisEeKKXKUvUuCjmg" mips="177730" nbCores="6"/>
 </xmi:XMI>

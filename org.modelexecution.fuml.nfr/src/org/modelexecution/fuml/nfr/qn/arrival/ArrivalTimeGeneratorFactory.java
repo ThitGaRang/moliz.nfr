@@ -42,9 +42,9 @@ public class ArrivalTimeGeneratorFactory {
 
 	@Test
 	public void testPatterns() {
-		testGenerator("Poisson", "open(poisson(0.4))");
+		testGenerator("Poisson", "open(poisson(.2))");
 		testGenerator("Poisson", "poisson(0.7)");
-		testGenerator("Poisson", "poisson(1.5)");
+		testGenerator("Poisson", "poisson(2.5)");
 		testGenerator("Periodic", "periodic(period=(2ms))");
 		testGenerator("Periodic", "period=(1ms)");
 	}

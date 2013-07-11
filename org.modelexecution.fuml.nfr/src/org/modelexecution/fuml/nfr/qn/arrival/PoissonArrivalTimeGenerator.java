@@ -15,17 +15,11 @@ public class PoissonArrivalTimeGenerator extends AbstractArrivalTimeGenerator im
 		this.lambda = lambda;
 	}
 	
-	private int nextPoisson() {
-        // using algorithm given by Knuth
-        // see http://en.wikipedia.org/wiki/Poisson_distribution
-        int k = 0;
-        double p = 1.0;
-        double L = Math.exp(-lambda);
-        do {
-            k++;
-            p *= getRandom().nextDouble();
-        } while (p >= L);
-        return k-1;
+	private double nextPoisson() {
+		double y = getRandom().nextDouble();
+		double x = Math.log(1-y);
+		double a = 1/y;
+		return (-a) * x;
     }
 
 	public double getLambda() {

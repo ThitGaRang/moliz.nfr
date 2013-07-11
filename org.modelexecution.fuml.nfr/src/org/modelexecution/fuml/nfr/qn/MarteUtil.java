@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Stereotype;
 
 public class MarteUtil {
@@ -55,6 +56,7 @@ public class MarteUtil {
 		return null;
 	}
 	
+
 	public static <T extends EObject> T getExactStereotype(Element umlElement, java.lang.Class<T> clazz) {
 		Stereotype appliedStereotype = null;
 		String stereotype = getString(clazz);
@@ -68,6 +70,28 @@ public class MarteUtil {
 		return appliedStereotype != null ? 
 				clazz.cast(umlElement.getStereotypeApplication(appliedStereotype)) :
 				null;
+	}
+	
+	public static <T extends EObject> T setOrUpdateFeature(NamedElement umlElement, Class<T> clazz, String featureName, Object value) {
+		T appliedStereotype = MarteUtil.getExactStereotype(umlElement, clazz);
+		
+		if(appliedStereotype == null) {
+			// apply stereotype
+			Stereotype newStereotype = umlElement.getApplicableStereotype(MarteUtil.getString(clazz));
+			if(newStereotype == null)
+				// stereotype is not applicable
+				return null;
+			umlElement.applyStereotype(newStereotype);
+			umlElement.setValue(newStereotype, featureName, value);
+		} else {
+			appliedStereotype.eSet(appliedStereotype.eClass().getEStructuralFeature(featureName), value);
+		}
+		
+		return MarteUtil.getExactStereotype(umlElement, clazz);
+	}
+	
+	public static <T extends EObject> void setFeature(T appliedStereotype, String featureName, Object value) {
+		appliedStereotype.eSet(appliedStereotype.eClass().getEStructuralFeature(featureName), value);
 	}
 	
 	public static double extractDoubleFromString(String text) {
