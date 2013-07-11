@@ -16,7 +16,6 @@ import java.io.OutputStream;
 
 import org.modelexecution.fuml.nfr.qn.MarteAnalysis;
 import org.modelexecution.fuml.nfr.qn.MarteAnalyzer;
-import org.modelexecution.fuml.nfr.qn.conversion.ConversionCSVPrinter;
 import org.modelexecution.fuml.nfr.qn.conversion.MarteAnalysisToQNConversion;
 import org.modelexecution.fuml.nfr.qn.conversion.MarteAnalysisToQNConverter;
 
@@ -35,7 +34,7 @@ public class InternalNFRQNProcess extends Process {
 	public InternalNFRQNProcess(String modelPath, String resultPath, String analysisContext, int simulationTime) {
 		this.resultPath = resultPath;
 		this.analysisContext = analysisContext;
-		analyzer = new MarteAnalyzer().setModel(modelPath);		
+		analyzer = new MarteAnalyzer(modelPath);		
 	}
 
 	public void run() {
@@ -44,8 +43,7 @@ public class InternalNFRQNProcess extends Process {
 		
 		MarteAnalysisToQNConverter converter = new MarteAnalysisToQNConverter();
 		MarteAnalysisToQNConversion conversion = converter.convertToQueuingNet(analysis, simulationTime);			
-		ConversionCSVPrinter.printQueuingNet(conversion.getQueuingNet());
-		
+
 		// TODO result has to be stored in given path
 	}
 
