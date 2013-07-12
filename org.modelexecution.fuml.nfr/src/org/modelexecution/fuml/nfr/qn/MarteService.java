@@ -7,7 +7,7 @@ public class MarteService {
 	private NamedElement umlElement;
 	private int multiplicity;
 	private SchedPolicyKind schedulingPolicy;
-	private int defaultServiceTime = 1;
+	private int defaultServiceTime = 1000; // ms
 
 	public MarteService() {
 	}
@@ -62,6 +62,6 @@ public class MarteService {
 	
 	@Override
 	public String toString() {
-		return getMultiplicity() + " x " + getName() + " with " + getSchedulingPolicy() + " (default service time: " + getDefaultServiceTime() + ")";
+		return getMultiplicity() + " x " + getName() + " with " + getSchedulingPolicy() + " (default service time: " + getDefaultServiceTime() + "ms)";
 	}
 }

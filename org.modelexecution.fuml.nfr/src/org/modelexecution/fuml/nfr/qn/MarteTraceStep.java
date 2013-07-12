@@ -67,6 +67,6 @@ public class MarteTraceStep {
 	
 	@Override
 	public String toString() {
-		return getResourceUsage().getExecTimeSum() + "s " + getName() + " on " + getService().getName();
+		return getResourceUsage().getExecTimeSum() + "ms " + getName() + " on " + getService().getName();
 	}
 }

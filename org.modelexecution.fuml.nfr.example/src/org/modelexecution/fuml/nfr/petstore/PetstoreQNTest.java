@@ -23,7 +23,7 @@ public class PetstoreQNTest {
 	private static MarteAnalysis analysis = analyzer.analyzeScenarios();
 	private static MarteAnalysisToQNConversion conversion = new MarteAnalysisToQNConverter().convertToQueuingNet(analysis, PetstoreExample.SIMULATION_TIME);
 	
-	@Test
+	//@Test
 	public void csvPrinterTest() throws IOException {
 		ConversionCSVPrinter printer = new ConversionCSVPrinter(conversion);
 		printer.printAllToFiles(PetstoreExample.OUTPUT_BASE_PATH);
@@ -47,7 +47,7 @@ public class PetstoreQNTest {
 		Assert.assertEquals(analysis.getServices().size(), net.services().size());
 		Assert.assertFalse(net.jobs().isEmpty());
 		Assert.assertFalse(net.completedJobs().isEmpty());
-		Assert.assertTrue(net.completionTime() >= PetstoreExample.SIMULATION_TIME);
+		Assert.assertTrue(net.completionTime() >= PetstoreExample.SIMULATION_TIME / 1000);
 	}
 	
 	@Test
@@ -71,13 +71,13 @@ public class PetstoreQNTest {
 		
 		MarteTrace buyScenario = analysis.getTraces().get(0);
 		Assert.assertEquals(13, buyScenario.getSteps().size());
-		Assert.assertEquals("open(poisson(0.4))", buyScenario.getWorkloadEvent().getPattern());
+		Assert.assertEquals("open(exp(0.0005))", buyScenario.getWorkloadEvent().getPattern());
 		Assert.assertEquals("login", buyScenario.getSteps().get(0).getName());
 		Assert.assertEquals("ApplicationController", buyScenario.getSteps().get(0).getService().getName());
 		
 		MarteTrace errorLoginScenario = analysis.getTraces().get(1);
 		Assert.assertEquals(3, errorLoginScenario.getSteps().size());
-		Assert.assertEquals("open(poisson(0.7))", errorLoginScenario.getWorkloadEvent().getPattern());
+		Assert.assertEquals("open(exp(0.00002))", errorLoginScenario.getWorkloadEvent().getPattern());
 		Assert.assertEquals("login", errorLoginScenario.getSteps().get(0).getName());
 		Assert.assertEquals("ApplicationController", errorLoginScenario.getSteps().get(0).getService().getName());
 		
@@ -103,13 +103,13 @@ public class PetstoreQNTest {
 		
 		MarteTrace buyScenario = analysis.getTraces().get(0);
 		Assert.assertEquals(13, buyScenario.getSteps().size());
-		Assert.assertEquals("open(poisson(0.4))", buyScenario.getWorkloadEvent().getPattern());
+		Assert.assertEquals("open(exp(0.0005))", buyScenario.getWorkloadEvent().getPattern());
 		Assert.assertEquals("login", buyScenario.getSteps().get(0).getName());
 		Assert.assertEquals("ApplicationController", buyScenario.getSteps().get(0).getService().getName());
 		
 		MarteTrace errorLoginScenario = analysis.getTraces().get(1);
 		Assert.assertEquals(3, errorLoginScenario.getSteps().size());
-		Assert.assertEquals("open(poisson(0.7))", errorLoginScenario.getWorkloadEvent().getPattern());
+		Assert.assertEquals("open(exp(0.00002))", errorLoginScenario.getWorkloadEvent().getPattern());
 		Assert.assertEquals("login", errorLoginScenario.getSteps().get(0).getName());
 		Assert.assertEquals("ApplicationController", errorLoginScenario.getSteps().get(0).getService().getName());
 		

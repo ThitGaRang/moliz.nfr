@@ -22099,7 +22099,7 @@
                 <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_DgaoJOVeEeKL5vAJlvwbbA" key="StereotypePropertyLocation" value="With brace"/>
               </eAnnotations>
               <children xmi:type="notation:DecorationNode" xmi:id="_DU_YaeP3EeKplurdgoeNBQ" type="5080">
-                <layoutConstraint xmi:type="notation:Location" xmi:id="_DU_YauP3EeKplurdgoeNBQ" x="40"/>
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_DU_YauP3EeKplurdgoeNBQ" x="-20" y="-35"/>
               </children>
               <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_DU_YYeP3EeKplurdgoeNBQ"/>
               <element xmi:type="uml:InitialNode" href="petstore.uml#_DUsdcOP3EeKplurdgoeNBQ"/>
@@ -22793,7 +22793,7 @@
       </children>
       <styles xmi:type="notation:FontStyle" xmi:id="_EXkxIeSDEeK9t6IV4U2r_w" fontName="Segoe UI"/>
       <element xmi:type="uml:ObjectFlow" href="petstore.uml#_EWFjYOSDEeK9t6IV4U2r_w"/>
-      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_EXkxIuSDEeK9t6IV4U2r_w" points="[9, 2, -237, -218]$[9, 194, -237, -26]$[246, 194, 0, -26]$[246, 212, 0, -8]"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_EXkxIuSDEeK9t6IV4U2r_w" points="[0, 2, -307, -218]$[18, 194, -289, -26]$[307, 194, 0, -26]$[307, 212, 0, -8]"/>
       <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_IYDkAOSDEeK9t6IV4U2r_w" id="(0.1917808219178082,0.8)"/>
     </edges>
     <edges xmi:type="notation:Connector" xmi:id="_5EtgUOSDEeK9t6IV4U2r_w" type="4003" source="_woXmIOSDEeK9t6IV4U2r_w" target="_ME_Y_eP4EeKplurdgoeNBQ" lineColor="0">

@@ -5,7 +5,7 @@ import java.util.Iterator;
 public class PoissonArrivalTimeGenerator extends AbstractArrivalTimeGenerator implements IArrivalTimeGenerator, Iterator<Integer> {
 
 	private double lambda;
-	private int next;
+	private double next = 0;
 	
 	public PoissonArrivalTimeGenerator() {
 	}
@@ -38,9 +38,9 @@ public class PoissonArrivalTimeGenerator extends AbstractArrivalTimeGenerator im
 
 	@Override
 	public Integer next() {
-		int curNext = next;
-		next += nextPoisson();
-		return curNext;
+		double curNext = next;
+		next += nextPoisson() * 1000; // convert to ms
+		return (int) curNext;
 	}
 
 	@Override

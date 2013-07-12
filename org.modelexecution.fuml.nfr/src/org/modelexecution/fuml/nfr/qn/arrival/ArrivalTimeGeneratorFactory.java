@@ -10,6 +10,7 @@ public class ArrivalTimeGeneratorFactory {
 	
 	private static String doublePattern = "(-?(\\d*)(\\.?)(\\d*))";
 	private static Pattern poissonPattern = Pattern.compile("\\D*[open(]?poisson[(]" + doublePattern + "\\D*[)][)]?");
+	private static Pattern exponentialPattern = Pattern.compile("\\D*[open(]?exp[(]" + doublePattern + "\\D*[)][)]?");
 	private static Pattern periodicPattern = Pattern.compile("\\D*[periodic(]?period=[(]" + doublePattern + "ms\\D*[)][)]?");
 
 	public ArrivalTimeGeneratorFactory() { }
@@ -28,6 +29,9 @@ public class ArrivalTimeGeneratorFactory {
 		} else if((patternMatcher = periodicPattern.matcher(martePattern)).matches()) {
 			int period = new Double(Double.parseDouble(patternMatcher.group(1))).intValue();
 			return new PeriodicArrivalTimeGenerator(simulationTime, period);
+		} else if((patternMatcher = exponentialPattern.matcher(martePattern)).matches()) {
+			Double period = new Double(Double.parseDouble(patternMatcher.group(1)));
+			return new PoissonArrivalTimeGenerator(simulationTime, period);
 		}
 		return null;
 	}

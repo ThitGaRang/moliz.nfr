@@ -22,15 +22,17 @@ import at.ac.tuwien.big.simpleqn.strategies.RoundRobinBalancing;
 
 public class MarteAnalysisToQNConverter {
 	
+	private static final int SEC_TO_MS = 1;
+	
 	public MarteAnalysisToQNConverter() { }
 	
 	private Service createServiceFrom(MarteService resource) {
 		if(resource.getMultiplicity() == 1 || resource.getSchedulingPolicy() == null)
-			return new Service(resource.getName(), resource.getDefaultServiceTime());
+			return new Service(resource.getName(), resource.getDefaultServiceTime() / SEC_TO_MS);
 		else if(resource.getSchedulingPolicy() == SchedPolicyKind.ROUND_ROBIN)
-			return new FixedBalancer(resource.getName(), resource.getDefaultServiceTime(), new RoundRobinBalancing(0), resource.getMultiplicity());
+			return new FixedBalancer(resource.getName(), resource.getDefaultServiceTime() / SEC_TO_MS, new RoundRobinBalancing(0), resource.getMultiplicity());
 		else if(resource.getSchedulingPolicy() == SchedPolicyKind.OTHER)
-			return new FixedBalancer(resource.getName(), resource.getDefaultServiceTime(), new RandomBalancing(0), resource.getMultiplicity());
+			return new FixedBalancer(resource.getName(), resource.getDefaultServiceTime() / SEC_TO_MS, new RandomBalancing(0), resource.getMultiplicity());
 		
 		return new Service(resource.getName(), resource.getDefaultServiceTime());
 	}
@@ -62,14 +64,15 @@ public class MarteAnalysisToQNConverter {
 			System.out.println(trace.getWorkloadEvent().getBase_NamedElement().getLabel() + ": ");
 			IArrivalTimeGenerator generator = ArrivalTimeGeneratorFactory.getInstance().getGenerator(simulationTime, trace.getWorkloadEvent().getPattern());
 			
-			for(int time : generator) {
-				job = new Job(time, trace.getName(), net);
-				System.out.print("  " + time + ", " + trace.getName());
+			for(int msTime : generator) {
+				job = new Job(msTime / SEC_TO_MS, trace.getName(), net);
+				System.out.println("  " + msTime / SEC_TO_MS + ", " + trace.getName());
 				for(MarteTraceStep step : trace.getSteps()) {
 					service = marteToQNService.get(step.getService());
 					if(service != null) {
-						int demand = (int)step.getResourceUsage().getExecTimeSum();
+						int demand = (int) (step.getResourceUsage().getExecTimeSum() / SEC_TO_MS);
 						if(demand > 0) {
+							System.out.println(" -> " + demand + "ms");
 							request = job.request(service, demand);
 							traceStepToRequest.put(step, request);
 							requestToTraceStep.put(request, step);

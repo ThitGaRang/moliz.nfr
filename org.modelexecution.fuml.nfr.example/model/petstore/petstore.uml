@@ -4475,7 +4475,7 @@
     <hostDemand>4.5,ms</hostDemand>
   </PAM:PaStep>
   <GQAM:GaExecHost xmi:id="_w8CPsOMoEeKANOyocN5Pmg" base_Classifier="_kj0V0OMoEeKANOyocN5Pmg" schedPolicy="FIFO" memSize=""/>
-  <GQAM:GaWorkloadEvent xmi:id="_WlTIAOSSEeK9t6IV4U2r_w" pattern="open(poisson(0.4))" effect="_q4sQIOY8EeK8regh0e0z8g" base_NamedElement="_DUsdcOP3EeKplurdgoeNBQ"/>
+  <GQAM:GaWorkloadEvent xmi:id="_WlTIAOSSEeK9t6IV4U2r_w" pattern="open(exp(0.0005))" effect="_q4sQIOY8EeK8regh0e0z8g" base_NamedElement="_DUsdcOP3EeKplurdgoeNBQ"/>
   <PAM:PaStep xmi:id="_DgHtMOVeEeKL5vAJlvwbbA" base_NamedElement="_DUsdcOP3EeKplurdgoeNBQ" blockT="">
     <hostDemand>(12.3,ms)</hostDemand>
   </PAM:PaStep>
@@ -4487,7 +4487,7 @@
   </PAM:PaStep>
   <GQAM:GaAnalysisContext xmi:id="_LazfUOcgEeKIZug8Oz7Q7Q" base_StructuredClassifier="__lOXUOZBEeK8regh0e0z8g" base_NamedElement="__lOXUOZBEeK8regh0e0z8g" workload="_Q2nmoOZCEeK8regh0e0z8g" platform="_f3PtMOZCEeK8regh0e0z8g"/>
   <GQAM:GaScenario xmi:id="_hgmm4OciEeKIZug8Oz7Q7Q" base_NamedElement="_RX1MgOciEeKIZug8Oz7Q7Q" base_Behavior="_RX1MgOciEeKIZug8Oz7Q7Q" cause="_hgwicOcjEeKIZug8Oz7Q7Q" root="_kmpVUOcjEeKIZug8Oz7Q7Q"/>
-  <GQAM:GaWorkloadEvent xmi:id="_hgwicOcjEeKIZug8Oz7Q7Q" pattern="open(poisson(0.7))" effect="_hgmm4OciEeKIZug8Oz7Q7Q" base_NamedElement="_kREjYOciEeKIZug8Oz7Q7Q"/>
+  <GQAM:GaWorkloadEvent xmi:id="_hgwicOcjEeKIZug8Oz7Q7Q" pattern="open(exp(0.00002))" effect="_hgmm4OciEeKIZug8Oz7Q7Q" base_NamedElement="_kREjYOciEeKIZug8Oz7Q7Q"/>
   <PAM:PaStep xmi:id="_kmpVUOcjEeKIZug8Oz7Q7Q" base_NamedElement="_kREjYOciEeKIZug8Oz7Q7Q" blockT="">
     <hostDemand>(3.2,ms)</hostDemand>
   </PAM:PaStep>
@@ -4505,57 +4505,57 @@
   <GRM:Resource xmi:id="_xVtMUOisEeKKXKUvUuCjmg" base_Classifier="_zO4KAN_QEeKxs-T-7hfQjA"/>
   <HLAM:RtUnit xmi:id="_zSpaIOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="2" base_BehavioredClassifier="_uJN3wN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
   <GRM:Resource xmi:id="_zS1AUOisEeKKXKUvUuCjmg" base_Classifier="_uJN3wN_QEeKxs-T-7hfQjA"/>
-  <GQAM:GaStep xmi:id="_53OhcOisEeKKXKUvUuCjmg" base_NamedElement="_F1NzAN_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+  <GQAM:GaStep xmi:id="_53OhcOisEeKKXKUvUuCjmg" base_NamedElement="_F1NzAN_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg" blockT="">
+    <execTime>25</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_77Z_sOisEeKKXKUvUuCjmg" base_NamedElement="_YtjK8N_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg" blockT="">
-    <execTime>2</execTime>
+    <execTime>13</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_9D1AUOisEeKKXKUvUuCjmg" base_NamedElement="_jwO1QN_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+    <execTime>125</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_9thdkOisEeKKXKUvUuCjmg" base_NamedElement="_q9j-oN_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
     <energy>1</energy>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_-dwnsOisEeKKXKUvUuCjmg" base_NamedElement="_ivFr4N_SEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>2</execTime>
+    <execTime>125</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_C41r4OitEeKKXKUvUuCjmg" base_NamedElement="__kdKIN_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>2</execTime>
+    <execTime>25</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_DiE2IOitEeKKXKUvUuCjmg" base_NamedElement="_P3yOsN_SEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+    <execTime>25</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_ERSFgOitEeKKXKUvUuCjmg" base_NamedElement="_Zqk-cN_SEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>2</execTime>
+    <execTime>25</execTime>
     <execTime></execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_FZJFcOitEeKKXKUvUuCjmg" base_NamedElement="_3W1ocN_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>3</execTime>
+    <execTime>250</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_NUi1wOitEeKKXKUvUuCjmg" base_NamedElement="_r4qfgN_SEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+    <execTime>25</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_N3PTIOitEeKKXKUvUuCjmg" base_NamedElement="_xedqYN_SEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+    <execTime>25</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_OlNMYOitEeKKXKUvUuCjmg" base_NamedElement="_3ser0N_SEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>2</execTime>
+    <execTime>1250</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_Pl9ewOitEeKKXKUvUuCjmg" base_NamedElement="_FoX-8N_TEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+    <execTime>2500</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_QWQ6UOitEeKKXKUvUuCjmg" base_NamedElement="_LwGLIN_TEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>2</execTime>
+    <execTime>5000</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_RK7RcOitEeKKXKUvUuCjmg" base_NamedElement="_Tou7UN_TEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+    <execTime>5000</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_R6iwgOitEeKKXKUvUuCjmg" base_NamedElement="_Za01wN_TEeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>1</execTime>
+    <execTime>5000</execTime>
   </GQAM:GaStep>
   <GQAM:GaStep xmi:id="_Sm9xoOitEeKKXKUvUuCjmg" base_NamedElement="_m92LEOfEEeKYGqqJU5zkGg" usedResources="_ojHVUOisEeKKXKUvUuCjmg">
-    <execTime>2</execTime>
+    <execTime>2500</execTime>
   </GQAM:GaStep>
-  <HwComputing:HwProcessor xmi:id="_9GKXAOl6EeKOXJTAqG5k1Q" base_Classifier="_mFElkOisEeKKXKUvUuCjmg" mips="177730" nbCores="6"/>
+  <HwComputing:HwProcessor xmi:id="_9GKXAOl6EeKOXJTAqG5k1Q" base_Classifier="_mFElkOisEeKKXKUvUuCjmg" mips="200000" nbCores="6"/>
 </xmi:XMI>

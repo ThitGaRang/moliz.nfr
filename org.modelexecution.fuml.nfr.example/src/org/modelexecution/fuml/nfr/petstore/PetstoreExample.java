@@ -10,6 +10,6 @@ public class PetstoreExample {
 	public static final String OUTPUT_INFO_PATH = "model/petstore/output/petstore.txt";
 	
 	public static final String CASE_STUDY_1_ACTIVITY = "caseStudy1";
-	public static final int SIMULATION_TIME = 5;
+	public static final int SIMULATION_TIME = 5000; // 5s
 	public static final String AC_QN = "petstore::AnalysisContext";
 }
