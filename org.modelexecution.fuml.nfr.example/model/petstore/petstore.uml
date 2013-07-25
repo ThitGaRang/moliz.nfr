@@ -4501,9 +4501,9 @@
   <GRM:Resource xmi:id="_tjNyIOisEeKKXKUvUuCjmg" base_Classifier="_wDqLMN_QEeKxs-T-7hfQjA"/>
   <HLAM:RtUnit xmi:id="_uyj6IOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_w-kUQN_QEeKxs-T-7hfQjA" queueSchedPolicy="Other"/>
   <GRM:Resource xmi:id="_uyu5QOisEeKKXKUvUuCjmg" base_Classifier="_w-kUQN_QEeKxs-T-7hfQjA"/>
-  <HLAM:RtUnit xmi:id="_xVg_EOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="3" base_BehavioredClassifier="_zO4KAN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
+  <HLAM:RtUnit xmi:id="_xVg_EOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="2" base_BehavioredClassifier="_zO4KAN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
   <GRM:Resource xmi:id="_xVtMUOisEeKKXKUvUuCjmg" base_Classifier="_zO4KAN_QEeKxs-T-7hfQjA"/>
-  <HLAM:RtUnit xmi:id="_zSpaIOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="2" base_BehavioredClassifier="_uJN3wN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
+  <HLAM:RtUnit xmi:id="_zSpaIOisEeKKXKUvUuCjmg" isDynamic="false" srPoolSize="1" base_BehavioredClassifier="_uJN3wN_QEeKxs-T-7hfQjA" queueSchedPolicy="RoundRobin"/>
   <GRM:Resource xmi:id="_zS1AUOisEeKKXKUvUuCjmg" base_Classifier="_uJN3wN_QEeKxs-T-7hfQjA"/>
   <GQAM:GaStep xmi:id="_53OhcOisEeKKXKUvUuCjmg" base_NamedElement="_F1NzAN_REeKxs-T-7hfQjA" usedResources="_ojHVUOisEeKKXKUvUuCjmg" blockT="">
     <execTime>25</execTime>

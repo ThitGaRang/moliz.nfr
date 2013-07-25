@@ -14,37 +14,58 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.modelexecution.fuml.nfr.qn.MarteAnalysis;
-import org.modelexecution.fuml.nfr.qn.MarteAnalyzer;
-import org.modelexecution.fuml.nfr.qn.conversion.MarteAnalysisToQNConversion;
-import org.modelexecution.fuml.nfr.qn.conversion.MarteAnalysisToQNConverter;
+import org.eclipse.emf.common.CommonPlugin;
+import org.eclipse.emf.common.util.URI;
+import org.modelexecution.fuml.nfr.debug.logger.ConsoleLogger;
+import org.modelexecution.fuml.nfr.simulation.WorkloadSimulation;
+import org.modelexecution.fuml.nfr.simulation.WorkloadSimulator;
+import org.modelexecution.fuml.nfr.simulation.result.ModelAnnotator;
+import org.modelexecution.fuml.nfr.simulation.result.ModelWriter;
+import org.modelexecution.fuml.nfr.simulation.result.SimulationCSVFilePrinter;
+import org.modelexecution.fuml.nfr.simulation.workload.Workload;
+import org.modelexecution.fuml.nfr.simulation.workload.WorkloadExtractor;
 
 public class InternalNFRQNProcess extends Process {
 
 	public static final int EXIT_VALUE = 0;
-	
-	private MarteAnalyzer analyzer;
+	private WorkloadExtractor extractor;
 	
 	private int simulationTime;
 	private String analysisContext;
-	@SuppressWarnings("unused")
 	private String resultPath;
 	
 
 	public InternalNFRQNProcess(String modelPath, String resultPath, String analysisContext, int simulationTime) {
 		this.resultPath = resultPath;
 		this.analysisContext = analysisContext;
-		analyzer = new MarteAnalyzer(modelPath);		
+		this.simulationTime = simulationTime;
+		extractor = new WorkloadExtractor(modelPath);		
 	}
 
-	public void run() {
-		MarteAnalysis analysis = analyzer.analyzeScenarios();
-		analyzer.setAnalysisContext(analysisContext);
+	public void run(ConsoleLogger consoleLogger) throws IOException {
+		String filePath = CommonPlugin.resolve(URI.createPlatformResourceURI(resultPath, false)).toFileString() + "\\";
 		
-		MarteAnalysisToQNConverter converter = new MarteAnalysisToQNConverter();
-		MarteAnalysisToQNConversion conversion = converter.convertToQueuingNet(analysis, simulationTime);			
-
-		// TODO result has to be stored in given path
+		consoleLogger.write("Start analyzing workload...");
+		extractor.setAnalysisContext(analysisContext);
+		Workload workload = extractor.extractWorkload();
+		consoleLogger.write("done.\n");
+		
+		consoleLogger.write("Start conversion to queueing network...");
+		WorkloadSimulator simulator = new WorkloadSimulator();
+		WorkloadSimulation simulation = simulator.simulateWorkload(workload, simulationTime);			
+		consoleLogger.write("done.\n");
+		
+		String umlOutputFile = filePath + workload.getModelName() + ".uml";
+		consoleLogger.write("Save result model as '" + umlOutputFile + "'...");
+		new ModelAnnotator(simulation).annotateModel();
+		ModelWriter modelWriter = new ModelWriter(simulation);
+		modelWriter.writeModel(umlOutputFile);
+		consoleLogger.write("done.\n");
+		
+		consoleLogger.write("Save result in files...");
+		SimulationCSVFilePrinter printer = new SimulationCSVFilePrinter(simulation);
+		printer.setFileDirectory(filePath).printAll();
+		consoleLogger.write("done.\n");
 	}
 
 	public boolean isInRunMode() {

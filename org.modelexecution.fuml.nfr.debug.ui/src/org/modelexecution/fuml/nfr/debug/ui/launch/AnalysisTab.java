@@ -10,6 +10,7 @@
  */
 package org.modelexecution.fuml.nfr.debug.ui.launch;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -56,7 +57,7 @@ public class AnalysisTab extends AbstractLaunchConfigurationTab {
 		composite.setLayout(new GridLayout(3, false));
 		
 		Label uriLabel = new Label(composite, SWT.LEFT);
-		uriLabel.setText("Output file:");
+		uriLabel.setText("Output directory:");
 		uriLabel.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT));
 		
 		uriText = new Text(composite, SWT.SINGLE | SWT.BORDER);
@@ -109,13 +110,13 @@ public class AnalysisTab extends AbstractLaunchConfigurationTab {
 	}
 
 	private boolean browseWorkspace() {
-		IFile file = WorkspaceResourceDialog.openNewFile(getShell(),
-				"Select file", "Select a file for saving analysis results",
-				null, null);
+		IContainer[] folderContainer = WorkspaceResourceDialog.openFolderSelection(getShell(),
+				"Select directory", "Select a directory for saving analysis results",
+				false, null, null);
 
-		if (file != null) {
+		if (folderContainer != null && folderContainer[0] != null) {
 			StringBuffer text = new StringBuffer();
-			text.append(URI.createPlatformResourceURI(file.getFullPath()
+			text.append(URI.createPlatformResourceURI(folderContainer[0].getFullPath()
 					.toString(), true));
 			text.append("  ");
 			setURIText(URI.decode(text.toString()));

@@ -1,58 +1,59 @@
 package org.modelexecution.fuml.nfr.petstore;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
-import org.modelexecution.fuml.nfr.qn.MarteAnalysis;
-import org.modelexecution.fuml.nfr.qn.MarteAnalyzer;
-import org.modelexecution.fuml.nfr.qn.MarteTrace;
-import org.modelexecution.fuml.nfr.qn.conversion.ConversionCSVPrinter;
-import org.modelexecution.fuml.nfr.qn.conversion.ConversionModelAnnotator;
-import org.modelexecution.fuml.nfr.qn.conversion.MarteAnalysisToQNConversion;
-import org.modelexecution.fuml.nfr.qn.conversion.MarteAnalysisToQNConverter;
+import org.modelexecution.fuml.nfr.simulation.WorkloadSimulation;
+import org.modelexecution.fuml.nfr.simulation.WorkloadSimulator;
+import org.modelexecution.fuml.nfr.simulation.result.ModelAnnotator;
+import org.modelexecution.fuml.nfr.simulation.result.ModelWriter;
+import org.modelexecution.fuml.nfr.simulation.result.SimulationCSVFilePrinter;
+import org.modelexecution.fuml.nfr.simulation.workload.Workload;
+import org.modelexecution.fuml.nfr.simulation.workload.WorkloadExtractor;
+import org.modelexecution.fuml.nfr.simulation.workload.WorkloadScenario;
 
 import at.ac.tuwien.big.simpleqn.QueuingNet;
 
 public class PetstoreQNTest {	
-	private static MarteAnalyzer analyzer = new MarteAnalyzer(PetstoreExample.INPUT_MODEL_PATH);
-	private static MarteAnalysis analysis = analyzer.analyzeScenarios();
-	private static MarteAnalysisToQNConversion conversion = new MarteAnalysisToQNConverter().convertToQueuingNet(analysis, PetstoreExample.SIMULATION_TIME);
+	private static WorkloadExtractor analyzer = new WorkloadExtractor(PetstoreExample.INPUT_MODEL_PATH);
+	private static Workload analysis = analyzer.extractWorkload();
+	private static WorkloadSimulation simulation = new WorkloadSimulator().simulateWorkload(analysis, PetstoreExample.SIMULATION_TIME);
 	
-	//@Test
+	@Test
 	public void csvPrinterTest() throws IOException {
-		ConversionCSVPrinter printer = new ConversionCSVPrinter(conversion);
-		printer.printAllToFiles(PetstoreExample.OUTPUT_BASE_PATH);
-		Assert.assertTrue(new File(PetstoreExample.OUTPUT_SERVICES_PATH).exists());
-		Assert.assertTrue(new File(PetstoreExample.OUTPUT_NET_PATH).exists());
-		Assert.assertTrue(new File(PetstoreExample.OUTPUT_INFO_PATH).exists());
+		SimulationCSVFilePrinter printer = new SimulationCSVFilePrinter(simulation);
+		printer.setFileDirectory(PetstoreExample.OUTPUT_BASE_PATH);
+		printer.printAll();
 	}
 	
 	@Test
 	public void modelAnnotationTest() {
-		ConversionModelAnnotator annotator = new ConversionModelAnnotator(conversion);
-		annotator.annotateModel().saveModel(PetstoreExample.OUTPUT_MODEL_PATH);
-		Assert.assertTrue(new File(PetstoreExample.OUTPUT_MODEL_PATH).exists());
+		ModelAnnotator annotator = new ModelAnnotator(simulation);
+		annotator.annotateModel();
+		ModelWriter writer = new ModelWriter(simulation);
+		writer.writeModel(PetstoreExample.OUTPUT_MODEL_PATH);
+		assertTrue(new File(PetstoreExample.OUTPUT_MODEL_PATH).exists());
 	}
 	
 	@Test
 	public void conversionTest() {
-		QueuingNet net = conversion.getQueuingNet();
-		Assert.assertNotNull(net);
-		Assert.assertTrue(net.isClosed());
-		Assert.assertEquals(analysis.getServices().size(), net.services().size());
-		Assert.assertFalse(net.jobs().isEmpty());
-		Assert.assertFalse(net.completedJobs().isEmpty());
-		Assert.assertTrue(net.completionTime() >= PetstoreExample.SIMULATION_TIME / 1000);
+		QueuingNet net = simulation.getQueuingNet();
+		assertNotNull(net);
+		assertTrue(net.isClosed());
+		assertEquals(analysis.getServiceCenters().size(), net.services().size());
+		assertFalse(net.jobs().isEmpty());
+		assertFalse(net.completedJobs().isEmpty());
+		assertTrue(net.completionTime() >= PetstoreExample.SIMULATION_TIME / 1000);
 	}
 	
 	@Test
 	public void analysisGiveACTest() {
-		MarteAnalysis analysis = new MarteAnalyzer(PetstoreExample.INPUT_MODEL_PATH).setAnalysisContext(PetstoreExample.AC_QN).analyzeScenarios();
+		Workload analysis = new WorkloadExtractor(PetstoreExample.INPUT_MODEL_PATH).setAnalysisContext(PetstoreExample.AC_QN).extractWorkload();
 		
 		List<String> serviceNames = new ArrayList<String>();
 		serviceNames.add("EntityManager");
@@ -61,25 +62,25 @@ public class PetstoreQNTest {
 		serviceNames.add("ApplicationController");
 		serviceNames.add("CatalogService");
 		
-		Assert.assertEquals(serviceNames.size(), analysis.getServices().size());
+		assertEquals(serviceNames.size(), analysis.getServiceCenters().size());
 		
 		List<String> scenarioNames = new ArrayList<String>();
 		scenarioNames.add("buyScenario");
 		scenarioNames.add("errorLoginScenario");
 		
-		Assert.assertEquals(scenarioNames.size(), analysis.getTraces().size());
+		assertEquals(scenarioNames.size(), analysis.getScenarios().size());
 		
-		MarteTrace buyScenario = analysis.getTraces().get(0);
-		Assert.assertEquals(13, buyScenario.getSteps().size());
-		Assert.assertEquals("open(exp(0.0005))", buyScenario.getWorkloadEvent().getPattern());
-		Assert.assertEquals("login", buyScenario.getSteps().get(0).getName());
-		Assert.assertEquals("ApplicationController", buyScenario.getSteps().get(0).getService().getName());
+		WorkloadScenario buyScenario = analysis.getScenarios().get(0);
+		assertEquals(13, buyScenario.getSteps().size());
+		assertEquals("open(exp(0.0005))", buyScenario.getWorkloadEvent().getPattern());
+		assertEquals("login", buyScenario.getSteps().get(0).getName());
+		assertEquals("ApplicationController", buyScenario.getSteps().get(0).getServiceCenter().getName());
 		
-		MarteTrace errorLoginScenario = analysis.getTraces().get(1);
-		Assert.assertEquals(3, errorLoginScenario.getSteps().size());
-		Assert.assertEquals("open(exp(0.00002))", errorLoginScenario.getWorkloadEvent().getPattern());
-		Assert.assertEquals("login", errorLoginScenario.getSteps().get(0).getName());
-		Assert.assertEquals("ApplicationController", errorLoginScenario.getSteps().get(0).getService().getName());
+		WorkloadScenario errorLoginScenario = analysis.getScenarios().get(1);
+		assertEquals(3, errorLoginScenario.getSteps().size());
+		assertEquals("open(exp(0.00002))", errorLoginScenario.getWorkloadEvent().getPattern());
+		assertEquals("login", errorLoginScenario.getSteps().get(0).getName());
+		assertEquals("ApplicationController", errorLoginScenario.getSteps().get(0).getServiceCenter().getName());
 		
 		System.out.println(analysis);
 	}
@@ -93,25 +94,25 @@ public class PetstoreQNTest {
 		serviceNames.add("ApplicationController");
 		serviceNames.add("CatalogService");
 		
-		Assert.assertEquals(serviceNames.size(), analysis.getServices().size());
+		assertEquals(serviceNames.size(), analysis.getServiceCenters().size());
 		
 		List<String> scenarioNames = new ArrayList<String>();
 		scenarioNames.add("buyScenario");
 		scenarioNames.add("errorLoginScenario");
 		
-		Assert.assertEquals(scenarioNames.size(), analysis.getTraces().size());
+		assertEquals(scenarioNames.size(), analysis.getScenarios().size());
 		
-		MarteTrace buyScenario = analysis.getTraces().get(0);
-		Assert.assertEquals(13, buyScenario.getSteps().size());
-		Assert.assertEquals("open(exp(0.0005))", buyScenario.getWorkloadEvent().getPattern());
-		Assert.assertEquals("login", buyScenario.getSteps().get(0).getName());
-		Assert.assertEquals("ApplicationController", buyScenario.getSteps().get(0).getService().getName());
+		WorkloadScenario buyScenario = analysis.getScenarios().get(0);
+		assertEquals(13, buyScenario.getSteps().size());
+		assertEquals("open(exp(0.0005))", buyScenario.getWorkloadEvent().getPattern());
+		assertEquals("login", buyScenario.getSteps().get(0).getName());
+		assertEquals("ApplicationController", buyScenario.getSteps().get(0).getServiceCenter().getName());
 		
-		MarteTrace errorLoginScenario = analysis.getTraces().get(1);
-		Assert.assertEquals(3, errorLoginScenario.getSteps().size());
-		Assert.assertEquals("open(exp(0.00002))", errorLoginScenario.getWorkloadEvent().getPattern());
-		Assert.assertEquals("login", errorLoginScenario.getSteps().get(0).getName());
-		Assert.assertEquals("ApplicationController", errorLoginScenario.getSteps().get(0).getService().getName());
+		WorkloadScenario errorLoginScenario = analysis.getScenarios().get(1);
+		assertEquals(3, errorLoginScenario.getSteps().size());
+		assertEquals("open(exp(0.00002))", errorLoginScenario.getWorkloadEvent().getPattern());
+		assertEquals("login", errorLoginScenario.getSteps().get(0).getName());
+		assertEquals("ApplicationController", errorLoginScenario.getSteps().get(0).getServiceCenter().getName());
 		
 		System.out.println(analysis);
 	}

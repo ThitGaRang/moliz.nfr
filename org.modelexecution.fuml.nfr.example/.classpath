@@ -12,8 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modelexecution.fuml.nfr"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modelexecution.fumldebug"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modelexecution.fumldebug.papyrus"/>
-	<classpathentry exported="true" kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
-	<classpathentry exported="true" kind="con" path="org.scala-ide.sdt.launching.SCALA_COMPILER_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/at.ac.tuwien.big.simpleqn"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Scala"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

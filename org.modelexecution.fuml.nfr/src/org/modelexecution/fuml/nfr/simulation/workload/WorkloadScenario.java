@@ -1,4 +1,13 @@
-package org.modelexecution.fuml.nfr.qn;
+/*
+ * Copyright (c) 2013 Vienna University of Technology.
+ * All rights reserved. This program and the accompanying materials are made 
+ * available under the terms of the Eclipse Public License v1.0 which accompanies 
+ * this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ * Martin Fleck - initial version
+ */
+package org.modelexecution.fuml.nfr.simulation.workload;
 
 import java.util.List;
 
@@ -6,19 +15,26 @@ import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaScenario;
 import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaWorkloadEvent;
 import org.eclipse.uml2.uml.NamedElement;
 
-public class MarteTrace {
+/***
+ * A workload scenario corresponds to one expected interaction with the modeled
+ * software application. It consists of a workload event that triggered the 
+ * interaction as well as all interaction steps.
+ * 
+ * @author Martin Fleck
+ */
+public class WorkloadScenario {
 	
 	private GaWorkloadEvent workloadEvent;
 	private GaScenario scenario;
-	private List<MarteTraceStep> steps;
+	private List<WorkloadScenarioStep> steps;
 
-	public MarteTrace(GaWorkloadEvent workloadEvent, List<MarteTraceStep> steps) {
+	public WorkloadScenario(GaWorkloadEvent workloadEvent, List<WorkloadScenarioStep> steps) {
 		this.workloadEvent = workloadEvent;
 		this.scenario = workloadEvent.getEffect();
 		setSteps(steps);
 	}
 	
-	public MarteTrace(GaScenario scenario, List<MarteTraceStep> steps) {
+	public WorkloadScenario(GaScenario scenario, List<WorkloadScenarioStep> steps) {
 		this.workloadEvent = scenario.getCause();
 		this.scenario = scenario;
 		this.steps = steps;
@@ -40,14 +56,18 @@ public class MarteTrace {
 		this.scenario = scenario;
 	}
 
-	public List<MarteTraceStep> getSteps() {
+	public List<WorkloadScenarioStep> getSteps() {
 		return steps;
 	}
 
-	public void setSteps(List<MarteTraceStep> steps) {
-		for(MarteTraceStep step : steps)
-			step.setTrace(this);
+	public void setSteps(List<WorkloadScenarioStep> steps) {
+		for(WorkloadScenarioStep step : steps)
+			step.setScenario(this);
 		this.steps = steps;
+	}
+	
+	public String getArrivalTimePattern() {
+		return getWorkloadEvent().getPattern();
 	}
 	
 	public NamedElement getScenarioUmlElement() {

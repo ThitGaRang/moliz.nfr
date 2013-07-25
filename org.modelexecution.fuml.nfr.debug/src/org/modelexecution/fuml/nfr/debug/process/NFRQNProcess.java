@@ -43,7 +43,11 @@ public class NFRQNProcess extends PlatformObject implements IProcess {
 			@SuppressWarnings("rawtypes") Map attributes) {
 		setFields(launch, process, name, attributes);
 		if (!isInDebugMode()) {
-			runProcess();
+			try {
+				runProcess();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			printAnalysisResult();
 			fireTerminateEvent();
 		}
@@ -51,7 +55,7 @@ public class NFRQNProcess extends PlatformObject implements IProcess {
 	
 	private void printAnalysisResult() {
 		try {
-			consoleLogger.write("QN process ready");
+			consoleLogger.write("---------------");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,8 +80,12 @@ public class NFRQNProcess extends PlatformObject implements IProcess {
 		return ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode());
 	}
 
-	public void runProcess() {
-		this.internalProcess.run();
+	public void runProcess() throws IOException {
+		try {
+			this.internalProcess.run(consoleLogger);
+		} catch (IOException e) {
+			consoleLogger.writeError(e.getMessage());
+		}
 	}
 
 	@Override

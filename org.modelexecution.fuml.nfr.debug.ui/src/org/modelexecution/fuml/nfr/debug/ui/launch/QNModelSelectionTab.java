@@ -25,8 +25,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.papyrus.MARTE.MARTE_AnalysisModel.GQAM.GaAnalysisContext;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.NamedElement;
+import org.modelexecution.fuml.nfr.MarteUtil;
 import org.modelexecution.fuml.nfr.debug.NFRDebugPlugin;
-import org.modelexecution.fuml.nfr.qn.MarteUtil;
 
 public class QNModelSelectionTab extends UMLModelSelectionTab {
 
