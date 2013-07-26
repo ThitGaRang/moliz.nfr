@@ -111,7 +111,7 @@ public class AnalysisTab extends AbstractLaunchConfigurationTab {
 
 	private boolean browseWorkspace() {
 		IContainer[] folderContainer = WorkspaceResourceDialog.openFolderSelection(getShell(),
-				"Select directory", "Select a directory for saving analysis results",
+				"Select directory", "Select a directory for saving the analysis results",
 				false, null, null);
 
 		if (folderContainer != null && folderContainer[0] != null) {
@@ -139,7 +139,7 @@ public class AnalysisTab extends AbstractLaunchConfigurationTab {
 			setErrorMessage("Provide a simulation time.");
 			return false;
 		} else if (!haveOutputResource()) {
-			setErrorMessage("Selected a output resource.");
+			setErrorMessage("Selected an output resource.");
 			return false;
 		} else {
 			setErrorMessage(null);

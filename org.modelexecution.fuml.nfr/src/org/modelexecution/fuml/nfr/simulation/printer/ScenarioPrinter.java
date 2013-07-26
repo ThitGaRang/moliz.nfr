@@ -23,6 +23,7 @@ public class ScenarioPrinter extends AbstractPrinter implements IStaticResultPri
 	public ScenarioPrinter(char separator, QueuingNet net, WorkloadScenario scenario) {
 		super(',');
 		setQueuingNet(net);
+		setWorkloadScenario(scenario);
 	}
 	
 	public WorkloadScenario getWorkloadScenario() {
@@ -46,15 +47,15 @@ public class ScenarioPrinter extends AbstractPrinter implements IStaticResultPri
 	public void printStatic(StringBuilder builer, Range range) {
 		String scenarioName = getWorkloadScenario().getName();
 		printLine(builer, ScenarioResult.Name.getTitle() + ": " + scenarioName);
-		printLine(builer, ScenarioResult.AvgResidenceTime.getTitle() + "  : " + net.averageResidenceTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.MinResidenceTime.getTitle() + "  : " + net.minResidenceTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.MaxResidenceTime.getTitle() + "  : " + net.maxResidenceTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.AvgServiceTime.getTitle() + "  :   " + net.averageServiceTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.MinServiceTime.getTitle() + "  :   " + net.minServiceTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.MaxServiceTime.getTitle() + "  :   " + net.maxServiceTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.AvgWaitingTime.getTitle() + "  :   " + net.averageWaitingTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.MinWaitingTime.getTitle() + "  :   " + net.minWaitingTimeOfJobCategory(scenarioName));
-		printLine(builer, ScenarioResult.MaxWaitingTime.getTitle() + "  :   " + net.maxWaitingTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.AvgResidenceTime.getTitle() + "  : " + getQueuingNet().averageResidenceTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.MinResidenceTime.getTitle() + "  : " + getQueuingNet().minResidenceTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.MaxResidenceTime.getTitle() + "  : " + getQueuingNet().maxResidenceTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.AvgServiceTime.getTitle() + "  :   " + getQueuingNet().averageServiceTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.MinServiceTime.getTitle() + "  :   " + getQueuingNet().minServiceTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.MaxServiceTime.getTitle() + "  :   " + getQueuingNet().maxServiceTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.AvgWaitingTime.getTitle() + "  :   " + getQueuingNet().averageWaitingTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.MinWaitingTime.getTitle() + "  :   " + getQueuingNet().minWaitingTimeOfJobCategory(scenarioName));
+		printLine(builer, ScenarioResult.MaxWaitingTime.getTitle() + "  :   " + getQueuingNet().maxWaitingTimeOfJobCategory(scenarioName));
 		printNewLine(builer);
 	}
 }

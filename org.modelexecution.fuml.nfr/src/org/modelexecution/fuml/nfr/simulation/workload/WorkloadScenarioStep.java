@@ -40,7 +40,7 @@ public class WorkloadScenarioStep {
 
 	public WorkloadScenarioStep setGaStep(GaStep step) {
 		this.step = step;
-		resourceUsage = new BasicResourceUsageSum(step.getBase_NamedElement(), step);
+		this.resourceUsage = new BasicResourceUsageSum(step.getBase_NamedElement(), step);
 		return this;
 	}
 	

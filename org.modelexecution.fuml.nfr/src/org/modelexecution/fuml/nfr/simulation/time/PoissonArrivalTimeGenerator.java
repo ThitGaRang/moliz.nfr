@@ -51,9 +51,4 @@ public class PoissonArrivalTimeGenerator extends AbstractArrivalTimeGenerator im
 		next += nextPoisson() * 1000; // convert to ms
 		return (int) curNext;
 	}
-
-	@Override
-	public void remove() {
-		; // do nothing
-	}
 }

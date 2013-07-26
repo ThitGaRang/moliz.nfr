@@ -184,7 +184,7 @@ public abstract class UMLModelSelectionTab extends AbstractLaunchConfigurationTa
 		}
 
 		selectedModelElementLabel = new Label(parent, SWT.LEFT);
-		selectedModelElementLabel.setText("Select main activity");
+		selectedModelElementLabel.setText("Select analysis context with resources and workload");
 		selectedModelElementLabel.setVisible(false);
 		modelTreeViewer = new TreeViewer(parent);
 		GridData treeLayoutData = new GridData(GridData.FILL_HORIZONTAL
