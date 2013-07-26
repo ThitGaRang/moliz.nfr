@@ -184,7 +184,7 @@ public abstract class UMLModelSelectionTab extends AbstractLaunchConfigurationTa
 		}
 
 		selectedModelElementLabel = new Label(parent, SWT.LEFT);
-		selectedModelElementLabel.setText("Select analysis context with resources and workload");
+		selectedModelElementLabel.setText(getModelElementLabelText());
 		selectedModelElementLabel.setVisible(false);
 		modelTreeViewer = new TreeViewer(parent);
 		GridData treeLayoutData = new GridData(GridData.FILL_HORIZONTAL
@@ -214,6 +214,8 @@ public abstract class UMLModelSelectionTab extends AbstractLaunchConfigurationTa
 					}
 				});
 	}
+	
+	abstract protected String getModelElementLabelText();
 
 	abstract protected EObject loadModelElementFromSelection(ISelection selection);	
 
@@ -291,7 +293,7 @@ public abstract class UMLModelSelectionTab extends AbstractLaunchConfigurationTa
 			setErrorMessage("Select a model resource.");
 			return false;
 		} else if (!isModelElementSelected()) {
-			setErrorMessage("Selected a main activity.");
+			setErrorMessage(getModelElementLabelText());
 			return false;
 		} else {
 			setErrorMessage(null);

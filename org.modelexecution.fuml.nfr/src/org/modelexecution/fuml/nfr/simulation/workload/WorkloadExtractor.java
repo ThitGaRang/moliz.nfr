@@ -59,12 +59,8 @@ public class WorkloadExtractor {
 	private String modelPath;
 	
 	public WorkloadExtractor(String modelPath) {
-		setModelPath(modelPath);
-	}
-	
-	public WorkloadExtractor setModelPath(String modelPath) {
 		this.modelPath = modelPath;
-		return this;
+		this.loader = new UMLModelLoader().setModel(getModelPath());
 	}
 	
 	public String getModelPath() {
@@ -97,8 +93,8 @@ public class WorkloadExtractor {
 	}
 	
 	private UMLModelLoader getModelLoader() {
-		if(loader == null)
-			loader = new UMLModelLoader().setModel(getModelPath());
+		if(!loader.isLoaded())
+			loader.loadModel();
 		return loader;
 	}
 	
@@ -178,7 +174,7 @@ public class WorkloadExtractor {
 	/******************** Extract from Model ***************************/
 	
 	private GaAnalysisContext extractAnalysisContext() {
-		TreeIterator<EObject> modelContents = getModelLoader().loadModel().getUMLModelResource().getAllContents();
+		TreeIterator<EObject> modelContents = getModelLoader().getUMLModelResource().getAllContents();
 		while(modelContents.hasNext()) {
 			EObject eObject = modelContents.next();
 			if(eObject instanceof Element) {
@@ -223,10 +219,6 @@ public class WorkloadExtractor {
 	
 	/******************** Analysis ****************/
 	
-	private void loadModel() {
-		getModelLoader().setModel(modelPath).loadModel();
-	}
-	
 	private GaAnalysisContext findAnalysisContext() {
 		GaAnalysisContext analysisContext = getAnalysisContext();
 		if(analysisContext == null)
@@ -261,7 +253,6 @@ public class WorkloadExtractor {
 	 * @return extracted workload
 	 */
 	public Workload extractWorkload() {
-		loadModel();
 		GaAnalysisContext context = findAnalysisContext();
 		Set<ServiceCenter> serviceCenters = getServiceCenters(context);
 		List<GaWorkloadEvent> workloadEvents = getWorkloadEvents(context);
@@ -381,6 +372,6 @@ public class WorkloadExtractor {
 	 * @return uml element
 	 */
 	private <T extends Element> T getMappedElement(fUML.Syntax.Classes.Kernel.Element element, Class<T> clazz) {
-		return clazz.cast(loader.getConversionResult().getInputObject(element));
+		return clazz.cast(getModelLoader().getConversionResult().getInputObject(element));
 	}
 }

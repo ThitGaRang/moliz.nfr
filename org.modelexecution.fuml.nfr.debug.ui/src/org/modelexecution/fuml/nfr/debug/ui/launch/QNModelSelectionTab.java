@@ -120,5 +120,10 @@ public class QNModelSelectionTab extends UMLModelSelectionTab {
 		}
 		return "";
 	}
+
+	@Override
+	protected String getModelElementLabelText() {
+		return "Select analysis context with resources and workload";
+	}
 	
 }

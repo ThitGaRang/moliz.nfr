@@ -112,4 +112,9 @@ public class EGModelSelectionTab extends UMLModelSelectionTab {
 		}
 		return "";
 	}
+	
+	@Override
+	protected String getModelElementLabelText() {
+		return "Select a main activity";
+	}
 }
