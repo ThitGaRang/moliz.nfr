@@ -6,7 +6,9 @@
       provider-name="modelexecution.org">
 
    <description url="Moliz Project Updates">
-      Model-based performance analyzer based on fUML for calculating the expected execution time of software services provided by a system.
+      Model-based performance analyzer based on fUML for calculating
+performance metrics of software services provided by
+a system.
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">
@@ -17,8 +19,8 @@ v1.0 which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      EPL 1.0
    </license>
 
    <url>
@@ -90,6 +92,26 @@ http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="org.modelexecution.fumldebug.papyrus"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="at.ac.tuwien.big.simpleqn"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.modelexecution.fumldebug.ui.commons"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.modelexecution.fumldebug.uml"
          download-size="0"
          install-size="0"
          version="0.0.0"
