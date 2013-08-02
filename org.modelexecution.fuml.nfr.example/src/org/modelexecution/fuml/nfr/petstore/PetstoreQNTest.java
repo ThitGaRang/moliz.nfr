@@ -10,9 +10,7 @@ import java.util.List;
 import org.junit.Test;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulation;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulator;
-import org.modelexecution.fuml.nfr.simulation.result.ModelAnnotator;
-import org.modelexecution.fuml.nfr.simulation.result.ModelWriter;
-import org.modelexecution.fuml.nfr.simulation.result.SimulationCSVFilePrinter;
+import org.modelexecution.fuml.nfr.simulation.result.SimulationHandler;
 import org.modelexecution.fuml.nfr.simulation.workload.Workload;
 import org.modelexecution.fuml.nfr.simulation.workload.WorkloadExtractor;
 import org.modelexecution.fuml.nfr.simulation.workload.WorkloadScenario;
@@ -23,20 +21,17 @@ public class PetstoreQNTest {
 	private static WorkloadExtractor extractor = new WorkloadExtractor(PetstoreExample.INPUT_MODEL_PATH);
 	private static Workload workload = extractor.extractWorkload();
 	private static WorkloadSimulation simulation = new WorkloadSimulator().simulateWorkload(workload, PetstoreExample.SIMULATION_TIME);
+	private static SimulationHandler simulationHandler = new SimulationHandler(simulation);
 	
 	@Test
 	public void csvPrinterTest() throws IOException {
-		SimulationCSVFilePrinter printer = new SimulationCSVFilePrinter(simulation);
-		printer.setFileDirectory(PetstoreExample.OUTPUT_BASE_PATH);
-		printer.printAll();
+		simulationHandler.writeCSVFiles(PetstoreExample.OUTPUT_BASE_PATH, true);
 	}
 	
 	@Test
 	public void modelAnnotationTest() {
-		ModelAnnotator annotator = new ModelAnnotator(simulation);
-		annotator.annotateModel();
-		ModelWriter writer = new ModelWriter(simulation);
-		writer.writeModel(PetstoreExample.OUTPUT_MODEL_PATH);
+		simulationHandler.annotateModel();
+		simulationHandler.writeModel(PetstoreExample.OUTPUT_MODEL_PATH);
 		assertTrue(new File(PetstoreExample.OUTPUT_MODEL_PATH).exists());
 	}
 	

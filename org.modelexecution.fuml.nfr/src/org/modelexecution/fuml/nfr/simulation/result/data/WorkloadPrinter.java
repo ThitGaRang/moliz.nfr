@@ -7,8 +7,9 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result.data;
 
+import org.modelexecution.fuml.nfr.simulation.result.AbstractPrinter;
 import org.modelexecution.fuml.nfr.simulation.result.WorkloadResult;
 
 import scala.collection.immutable.Range;

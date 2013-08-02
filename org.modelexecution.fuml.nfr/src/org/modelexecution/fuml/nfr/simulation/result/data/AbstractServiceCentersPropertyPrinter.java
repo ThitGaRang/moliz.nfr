@@ -7,7 +7,7 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result.data;
 
 import java.util.List;
 
@@ -18,11 +18,11 @@ import scala.collection.immutable.Range.Inclusive;
 
 import at.ac.tuwien.big.simpleqn.Service;
 
-public abstract class AbstractServicesPropertyPrinter extends AbstractServicePrinter implements IEvolutionResultPrinter {
+public abstract class AbstractServiceCentersPropertyPrinter extends AbstractServiceCenterPrinter implements IEvolutionResultPrinter {
 
 	private List<Service> services;
 	
-	public AbstractServicesPropertyPrinter(char separator, List<Service> services) {
+	public AbstractServiceCentersPropertyPrinter(char separator, List<Service> services) {
 		super(separator);
 		this.services = services;
 	}

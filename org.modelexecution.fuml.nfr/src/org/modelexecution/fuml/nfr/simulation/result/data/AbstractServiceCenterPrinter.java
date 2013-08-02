@@ -7,15 +7,17 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result.data;
+
+import org.modelexecution.fuml.nfr.simulation.result.AbstractPrinter;
 
 import at.ac.tuwien.big.simpleqn.Balancer;
 import at.ac.tuwien.big.simpleqn.ScalingBalancer;
 import at.ac.tuwien.big.simpleqn.Service;
 
-public abstract class AbstractServicePrinter extends AbstractPrinter {
+public abstract class AbstractServiceCenterPrinter extends AbstractPrinter {
 
-	public AbstractServicePrinter(char separator) {
+	public AbstractServiceCenterPrinter(char separator) {
 		super(separator);
 	}
 	

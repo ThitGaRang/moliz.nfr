@@ -18,7 +18,9 @@ public enum ServiceCenterResult implements ISimulationResult {
 	IdleTime("Idle Time", "idleTime"),
 	BusyTime("Busy Time", "busyTime"),
 	MaxQueueLength("Max Queue Length", "maxQueueLength"),
-	AvgQueueLength("Avg Queue Length", "avgQueueLength");
+	AvgQueueLength("Avg Queue Length", "avgQueueLength"),
+	AvgDemandPerRequest("Avg Demand per Request", "avgDemandPerRequest"),
+	Throughput("Throughput", "throughput");
 	
 	private final String title;
 	private final String qualifierName;

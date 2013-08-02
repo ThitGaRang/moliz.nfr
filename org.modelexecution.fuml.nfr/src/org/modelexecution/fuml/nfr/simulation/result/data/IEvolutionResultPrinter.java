@@ -1,4 +1,4 @@
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result.data;
 
 public interface IEvolutionResultPrinter  {
 	void printPropertyHeaderLine(StringBuilder builder);

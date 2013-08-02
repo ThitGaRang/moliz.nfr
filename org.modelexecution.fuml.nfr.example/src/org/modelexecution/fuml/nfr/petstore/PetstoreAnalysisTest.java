@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulation;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulator;
-import org.modelexecution.fuml.nfr.simulation.result.SimulationCSVFilePrinter;
-import org.modelexecution.fuml.nfr.simulation.result.SimulationCSVPrinter;
+import org.modelexecution.fuml.nfr.simulation.result.data.SimulationCSVFileWriter;
+import org.modelexecution.fuml.nfr.simulation.result.data.SimulationCSVPrinter;
 import org.modelexecution.fuml.nfr.simulation.workload.ServiceCenter;
 import org.modelexecution.fuml.nfr.simulation.workload.Workload;
 import org.modelexecution.fuml.nfr.simulation.workload.WorkloadExtractor;
@@ -48,8 +48,8 @@ public class PetstoreAnalysisTest {
 		
 		long estimatedTime = System.currentTimeMillis() - startTime;
 		System.out.println("Analysis finished: " + estimatedTime + "ms");
-		SimulationCSVFilePrinter printer = new SimulationCSVFilePrinter(conversion);
-		printer.setFileDirectory(BASE + subDir);
+		SimulationCSVFileWriter printer = new SimulationCSVFileWriter(conversion);
+		printer.setOutputDirectory(BASE + subDir);
 		printer.printStaticInformation(NAME + "_overview.txt");
 	}
 	

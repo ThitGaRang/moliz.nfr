@@ -7,19 +7,14 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.result;
+package org.modelexecution.fuml.nfr.simulation.result.data;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulation;
-import org.modelexecution.fuml.nfr.simulation.printer.AbstractPrinter;
-import org.modelexecution.fuml.nfr.simulation.printer.IEvolutionResultPrinter;
-import org.modelexecution.fuml.nfr.simulation.printer.ScenarioPrinter;
-import org.modelexecution.fuml.nfr.simulation.printer.ServicePrinter;
-import org.modelexecution.fuml.nfr.simulation.printer.ServicesAvgQueueLengthPrinter;
-import org.modelexecution.fuml.nfr.simulation.printer.ServicesUtilizationPrinter;
-import org.modelexecution.fuml.nfr.simulation.printer.WorkloadPrinter;
+import org.modelexecution.fuml.nfr.simulation.result.AbstractPrinter;
+import org.modelexecution.fuml.nfr.simulation.result.ServiceCenterResult;
 import org.modelexecution.fuml.nfr.simulation.workload.WorkloadScenario;
 
 import scala.collection.immutable.Range.Inclusive;
@@ -78,12 +73,12 @@ public class SimulationCSVPrinter extends AbstractPrinter {
 		printStaticInformation(out);
 		printNetEvolution(out);
 		printAllServicesEvolution(out);
-		printServicesUtilizationEvolution(out);
+		printAllServicePropertiesEvolution(out);
 	}
 	
 	/*********** Static Printing ***********/
 	
-	public void printStaticInformation(OutputStream out) throws IOException {
+	public OutputStream printStaticInformation(OutputStream out) throws IOException {
 		StringBuilder buffer = new StringBuilder();
 		Inclusive range = new Inclusive(0, getFinalTime(), 1);
 		
@@ -121,11 +116,12 @@ public class SimulationCSVPrinter extends AbstractPrinter {
 		printStaticInformationScenarios(buffer, range);
 		out.write(buffer.toString().getBytes());		
 		out.flush();
+		return out;
 	}
 	
 	private void printStaticInformationServices(StringBuilder buffer, Inclusive range) {
 		for(Service service : getSimulation().getAllServices())	
-			new ServicePrinter(getSeparator(), service).printStatic(buffer, range);
+			new ServiceCenterPrinter(getSeparator(), service).printStatic(buffer, range);
 	}
 	
 	private void printStaticInformationScenarios(StringBuilder builer, Inclusive range) {
@@ -135,7 +131,7 @@ public class SimulationCSVPrinter extends AbstractPrinter {
 	
 	/*********** Net Printing ***********/
 	
-	public void printNetEvolution(OutputStream out) throws IOException {
+	public OutputStream printNetEvolution(OutputStream out) throws IOException {
 		StringBuilder builder = new StringBuilder();
 		
 		getNetPrinter().printPropertyHeaderLine(builder);
@@ -143,6 +139,7 @@ public class SimulationCSVPrinter extends AbstractPrinter {
 		
 		out.write(builder.toString().getBytes());
 		out.flush();
+		return out;
 	}
 	
 	/*********** Service Printing ***********/
@@ -152,8 +149,8 @@ public class SimulationCSVPrinter extends AbstractPrinter {
 			printServiceEvolution(out, service);
 	}
 	
-	public void printServiceEvolution(OutputStream out, Service service) throws IOException {		
-		ServicePrinter printer = new ServicePrinter(getSeparator(), service);
+	public OutputStream printServiceEvolution(OutputStream out, Service service) throws IOException {		
+		ServiceCenterPrinter printer = new ServiceCenterPrinter(getSeparator(), service);
 		StringBuilder builder = new StringBuilder();
 		
 		printer.printPropertyHeaderLine(builder);
@@ -161,34 +158,55 @@ public class SimulationCSVPrinter extends AbstractPrinter {
 		
 		out.write(builder.toString().getBytes());
 		out.flush();
+		return out;
 	}
 	
 	/************* Property Printing *********/
 	
 	public void printAllServicePropertiesEvolution(OutputStream out) throws IOException {
-		printServicesUtilizationEvolution(out);
-		printServicesAvgQueueLengthEvolution(out);
+		printServicesPropertyEvolution(out, ServiceCenterResult.Utilization);
+		printServicesPropertyEvolution(out, ServiceCenterResult.Throughput);
+		printServicesPropertyEvolution(out, ServiceCenterResult.BusyTime);
+		printServicesPropertyEvolution(out, ServiceCenterResult.IdleTime);
+		printServicesPropertyEvolution(out, ServiceCenterResult.AvgDemandPerRequest);
+		printServicesPropertyEvolution(out, ServiceCenterResult.AvgQueueLength);
+		printServicesPropertyEvolution(out, ServiceCenterResult.MaxQueueLength);
 	}
 	
-	public void printServicesUtilizationEvolution(OutputStream out) throws IOException {
+	private IEvolutionResultPrinter getResultPrinter(ServiceCenterResult property) {
+		switch(property) {
+		case AvgDemandPerRequest:
+			return new ServiceCentersAvgDemandPerRequestPrinter(getSeparator(), getSimulation().getAllServices());
+		case AvgQueueLength:
+			return new ServiceCentersAvgQueueLengthPrinter(getSeparator(), getSimulation().getAllServices());
+		case BusyTime:
+			return new ServiceCentersBusyTimePrinter(getSeparator(), getSimulation().getAllServices());
+		case IdleTime:
+			return new ServiceCentersIdleTimePrinter(getSeparator(), getSimulation().getAllServices());
+		case MaxQueueLength:
+			return new ServiceCentersMaxQueueLengthPrinter(getSeparator(), getSimulation().getAllServices());
+		case Throughput:
+			return new ServiceCentersThroughputPrinter(getSeparator(), getSimulation().getAllServices());
+		case Utilization:
+			return new ServiceCentersUtilizationPrinter(getSeparator(), getSimulation().getAllServices());
+		default:
+			break;
+		}
+		return null;
+	}
+	
+	public OutputStream printServicesPropertyEvolution(OutputStream out, ServiceCenterResult property) throws IOException {
+		return printServicesPropertyEvolution(out, getResultPrinter(property));
+	}
+	
+	public OutputStream printServicesPropertyEvolution(OutputStream out, IEvolutionResultPrinter printer) throws IOException {
 		StringBuilder builder = new StringBuilder();
-		
-		IEvolutionResultPrinter printer = new ServicesUtilizationPrinter(getSeparator(), getSimulation().getAllServices());
+
 		printer.printPropertyHeaderLine(builder);
 		printer.printPropertyEvolution(builder, getFinalTime(), getTimeStepSize());
 		
 		out.write(builder.toString().getBytes());
 		out.flush();
-	}
-	
-	public void printServicesAvgQueueLengthEvolution(OutputStream out) throws IOException {
-		StringBuilder builder = new StringBuilder();
-		
-		IEvolutionResultPrinter printer = new ServicesAvgQueueLengthPrinter(getSeparator(), getSimulation().getAllServices());
-		printer.printPropertyHeaderLine(builder);
-		printer.printPropertyEvolution(builder, getFinalTime(), getTimeStepSize());
-		
-		out.write(builder.toString().getBytes());
-		out.flush();
-	}
+		return out;
+	}	
 }

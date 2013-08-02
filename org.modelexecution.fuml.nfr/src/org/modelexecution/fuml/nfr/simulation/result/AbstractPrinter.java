@@ -7,7 +7,7 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result;
 
 public abstract class AbstractPrinter {
 

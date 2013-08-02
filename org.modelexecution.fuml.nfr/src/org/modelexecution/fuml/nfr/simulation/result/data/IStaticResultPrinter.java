@@ -1,4 +1,4 @@
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result.data;
 
 import scala.collection.immutable.Range;
 

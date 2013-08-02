@@ -19,15 +19,17 @@ import org.eclipse.emf.common.util.URI;
 import org.modelexecution.fuml.nfr.debug.logger.ConsoleLogger;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulation;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulator;
-import org.modelexecution.fuml.nfr.simulation.result.ModelAnnotator;
-import org.modelexecution.fuml.nfr.simulation.result.ModelWriter;
-import org.modelexecution.fuml.nfr.simulation.result.SimulationCSVFilePrinter;
+import org.modelexecution.fuml.nfr.simulation.result.SimulationHandler;
+import org.modelexecution.fuml.nfr.simulation.result.data.SimulationCSVFileWriter;
+import org.modelexecution.fuml.nfr.simulation.result.model.ModelAnnotator;
+import org.modelexecution.fuml.nfr.simulation.result.model.ModelWriter;
 import org.modelexecution.fuml.nfr.simulation.workload.Workload;
 import org.modelexecution.fuml.nfr.simulation.workload.WorkloadExtractor;
 
 public class InternalNFRQNProcess extends Process {
 
 	public static final int EXIT_VALUE = 0;
+	private SimulationHandler handler;
 	private WorkloadExtractor extractor;
 	
 	private int simulationTime;
@@ -43,28 +45,28 @@ public class InternalNFRQNProcess extends Process {
 	}
 
 	public void run(ConsoleLogger consoleLogger) throws IOException {
-		String filePath = CommonPlugin.resolve(URI.createPlatformResourceURI(resultPath, false)).toFileString() + "\\";
+		String outputDirectory = CommonPlugin.resolve(URI.createPlatformResourceURI(resultPath, false)).toFileString() + "\\";
 		
 		consoleLogger.write("Start analyzing workload...");
 		extractor.setAnalysisContext(analysisContext);
 		Workload workload = extractor.extractWorkload();
 		consoleLogger.write("done.\n");
 		
-		consoleLogger.write("Start conversion to queueing network...");
+		consoleLogger.write("Start calculating properties...");
 		WorkloadSimulator simulator = new WorkloadSimulator();
 		WorkloadSimulation simulation = simulator.simulateWorkload(workload, simulationTime);			
 		consoleLogger.write("done.\n");
 		
-		String umlOutputFile = filePath + workload.getModelName() + ".uml";
+		SimulationHandler handler = new SimulationHandler(simulation);
+		String umlOutputFile = outputDirectory + workload.getModelName() + ".uml";
 		consoleLogger.write("Save result model as '" + umlOutputFile + "'...");
-		new ModelAnnotator(simulation).annotateModel();
+		handler.annotateModel();
 		ModelWriter modelWriter = new ModelWriter(simulation);
 		modelWriter.writeModel(umlOutputFile);
 		consoleLogger.write("done.\n");
 		
 		consoleLogger.write("Save result in files...");
-		SimulationCSVFilePrinter printer = new SimulationCSVFilePrinter(simulation);
-		printer.setFileDirectory(filePath).printAll();
+		handler.writeCSVFiles(outputDirectory, true);
 		consoleLogger.write("done.\n");
 	}
 

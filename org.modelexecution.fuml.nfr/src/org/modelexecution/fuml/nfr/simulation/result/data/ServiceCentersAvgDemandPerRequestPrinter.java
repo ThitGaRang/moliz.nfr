@@ -14,14 +14,14 @@ import java.util.List;
 import scala.collection.immutable.Range;
 import at.ac.tuwien.big.simpleqn.Service;
 
-public class ServiceCentersUtilizationPrinter extends AbstractServiceCentersPropertyPrinter {
+public class ServiceCentersAvgDemandPerRequestPrinter extends AbstractServiceCentersPropertyPrinter {
 
-	public ServiceCentersUtilizationPrinter(char separator, List<Service> services) {
+	public ServiceCentersAvgDemandPerRequestPrinter(char separator, List<Service> services) {
 		super(separator, services);
 	}
 
 	@Override
 	protected void printPropertyValue(StringBuilder builder, Service service, Range range) {
-		printWithSeparator(builder, service.utilization(range));
+		printWithSeparator(builder, service.avgServiceRequirementPerRequest(range));
 	}
 }

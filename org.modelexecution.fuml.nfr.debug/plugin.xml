@@ -13,7 +13,7 @@
             delegate="org.modelexecution.fuml.nfr.debug.launch.NFRQNLaunchDelegate"
             id="org.modelexecution.fuml.nfr.debug.qn.launchConfigurationType"
             modes="run"
-            name="qn">
+            name="Resource Contention">
       </launchConfigurationType>
    </extension>
    <extension

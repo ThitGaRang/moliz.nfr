@@ -7,7 +7,7 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result.data;
 
 import org.modelexecution.fuml.nfr.simulation.result.ServiceCenterResult;
 
@@ -15,11 +15,11 @@ import scala.collection.immutable.Range;
 import scala.collection.immutable.Range.Inclusive;
 import at.ac.tuwien.big.simpleqn.Service;
 
-public class ServicePrinter extends AbstractServicePrinter implements IStaticResultPrinter, IEvolutionResultPrinter {
+public class ServiceCenterPrinter extends AbstractServiceCenterPrinter implements IStaticResultPrinter, IEvolutionResultPrinter {
 
 	private Service service;
 	
-	public ServicePrinter(char separator, Service service) {
+	public ServiceCenterPrinter(char separator, Service service) {
 		super(separator);
 		this.service = service;
 	}
@@ -36,6 +36,8 @@ public class ServicePrinter extends AbstractServicePrinter implements IStaticRes
 		printWithSeparator(builder, ServiceCenterResult.BusyTime);
 		printWithSeparator(builder, ServiceCenterResult.MaxQueueLength);
 		printWithSeparator(builder, ServiceCenterResult.AvgQueueLength);
+		printWithSeparator(builder, ServiceCenterResult.AvgDemandPerRequest);
+		printWithSeparator(builder, ServiceCenterResult.Throughput);
 		printNewLine(builder);
 	}
 	
@@ -53,6 +55,8 @@ public class ServicePrinter extends AbstractServicePrinter implements IStaticRes
 		printWithSeparator(builder, getService().busyTime(range));
 		printWithSeparator(builder, getService().maxQueueLength(range));
 		printWithSeparator(builder, getService().avgQueueLength(range));
+		printWithSeparator(builder, getService().avgServiceRequirementPerRequest(range));
+		printWithSeparator(builder, getService().throughput(range));
 		printNewLine(builder);
 	}
 	
@@ -66,6 +70,8 @@ public class ServicePrinter extends AbstractServicePrinter implements IStaticRes
 		printLine(builer, "  " + ServiceCenterResult.BusyTime.getTitle() +  ": " + getService().busyTime(range));
 		printLine(builer, "  " + ServiceCenterResult.MaxQueueLength.getTitle() +  ": " + getService().maxQueueLength(range));
 		printLine(builer, "  " + ServiceCenterResult.AvgQueueLength.getTitle() +  ": " + getService().avgQueueLength(range));
+		printLine(builer, "  " + ServiceCenterResult.AvgDemandPerRequest.getTitle() +  ": " + getService().avgServiceRequirementPerRequest(range));
+		printLine(builer, "  " + ServiceCenterResult.Throughput.getTitle() +  ": " + getService().throughput(range));
 		printNewLine(builer);
 	}
 

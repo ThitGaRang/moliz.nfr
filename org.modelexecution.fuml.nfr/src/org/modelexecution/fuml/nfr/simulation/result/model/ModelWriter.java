@@ -7,7 +7,7 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.result;
+package org.modelexecution.fuml.nfr.simulation.result.model;
 
 import java.io.IOException;
 import java.util.Collections;

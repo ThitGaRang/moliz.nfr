@@ -7,16 +7,16 @@
  * Contributors:
  * Martin Fleck - initial version
  */
-package org.modelexecution.fuml.nfr.simulation.printer;
+package org.modelexecution.fuml.nfr.simulation.result.data;
 
 import java.util.List;
 
 import at.ac.tuwien.big.simpleqn.Service;
 import scala.collection.immutable.Range;
 
-public class ServicesAvgQueueLengthPrinter extends AbstractServicesPropertyPrinter {
+public class ServiceCentersAvgQueueLengthPrinter extends AbstractServiceCentersPropertyPrinter {
 
-	public ServicesAvgQueueLengthPrinter(char separator, List<Service> services) {
+	public ServiceCentersAvgQueueLengthPrinter(char separator, List<Service> services) {
 		super(separator, services);
 	}
 
