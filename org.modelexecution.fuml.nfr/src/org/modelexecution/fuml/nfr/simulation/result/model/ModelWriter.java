@@ -30,7 +30,7 @@ public class ModelWriter {
 	
 	public Resource writeModel(String filePath) {		
 		Resource modelResource = getWorkloadSimulation().getWorkload().getUMLModelResource();
-	    Resource saveResource = modelResource.getResourceSet().createResource(URI.createFileURI(filePath));
+	    Resource saveResource = modelResource.getResourceSet().createResource(URI.createURI(filePath, true));
 	    saveResource.getContents().addAll(modelResource.getContents());
 
 	    try {

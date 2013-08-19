@@ -14,14 +14,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.eclipse.emf.common.CommonPlugin;
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.modelexecution.fuml.nfr.debug.logger.ConsoleLogger;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulation;
 import org.modelexecution.fuml.nfr.simulation.WorkloadSimulator;
 import org.modelexecution.fuml.nfr.simulation.result.SimulationHandler;
-import org.modelexecution.fuml.nfr.simulation.result.data.SimulationCSVFileWriter;
-import org.modelexecution.fuml.nfr.simulation.result.model.ModelAnnotator;
 import org.modelexecution.fuml.nfr.simulation.result.model.ModelWriter;
 import org.modelexecution.fuml.nfr.simulation.workload.Workload;
 import org.modelexecution.fuml.nfr.simulation.workload.WorkloadExtractor;
@@ -29,7 +29,6 @@ import org.modelexecution.fuml.nfr.simulation.workload.WorkloadExtractor;
 public class InternalNFRQNProcess extends Process {
 
 	public static final int EXIT_VALUE = 0;
-	private SimulationHandler handler;
 	private WorkloadExtractor extractor;
 	
 	private int simulationTime;
@@ -45,7 +44,7 @@ public class InternalNFRQNProcess extends Process {
 	}
 
 	public void run(ConsoleLogger consoleLogger) throws IOException {
-		String outputDirectory = CommonPlugin.resolve(URI.createPlatformResourceURI(resultPath, false)).toFileString() + "\\";
+		Path resultFolder = new Path(resultPath);
 		
 		consoleLogger.write("Start analyzing workload...");
 		extractor.setAnalysisContext(analysisContext);
@@ -58,15 +57,21 @@ public class InternalNFRQNProcess extends Process {
 		consoleLogger.write("done.\n");
 		
 		SimulationHandler handler = new SimulationHandler(simulation);
-		String umlOutputFile = outputDirectory + workload.getModelName() + ".uml";
+		
+		IPath umlOutputFile = resultFolder.append(workload.getModelName() + ".uml");
 		consoleLogger.write("Save result model as '" + umlOutputFile + "'...");
 		handler.annotateModel();
 		ModelWriter modelWriter = new ModelWriter(simulation);
-		modelWriter.writeModel(umlOutputFile);
+		modelWriter.writeModel(umlOutputFile.toString());
 		consoleLogger.write("done.\n");
 		
 		consoleLogger.write("Save result in files...");
-		handler.writeCSVFiles(outputDirectory, true);
+		
+		String wsRelativePath = resultFolder.toString().replace("platform:/resource", "");
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		String absoluteResultPath = root.getLocation() + wsRelativePath;
+		
+		handler.writeCSVFiles(absoluteResultPath, true);
 		consoleLogger.write("done.\n");
 	}
 

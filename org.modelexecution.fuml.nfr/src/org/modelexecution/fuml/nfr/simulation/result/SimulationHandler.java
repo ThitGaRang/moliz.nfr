@@ -22,8 +22,8 @@ import org.modelexecution.fuml.nfr.simulation.result.model.ModelWriter;
 
 public class SimulationHandler {
 
-	private static final String CSV_SUBDIR = "csv/";
-	private static final String HTML_SUBDIR = "html/";
+	private static final String CSV_SUBDIR = "/csv/";
+	private static final String HTML_SUBDIR = "/html/";
 	
 	private WorkloadSimulation simulation;
 	private ModelAnnotator modelAnnotator;
